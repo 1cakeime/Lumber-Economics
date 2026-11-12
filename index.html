@@ -1,0 +1,1859 @@
+<title>Lumber Economics</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a mill office. Walnut header with end-grain mark and a cut-board edge, kraft-paper ground, slab type, mill grade-stamp labels, pine-green sheets. */
+:root{
+  --bg:#f3ece1; --surface:#fffaf3; --ink:#2b2119; --muted:#6e6052; --line:#e2d6c4; --chip:#efe5d5;
+  --accent:#b5651d; --accent-dk:#7e430f; --accent-ink:#fffaf3; --pine:#2f5a43;
+  --walnut:#2a1d14; --walnut-ink:#f5ecdf; --hi:#f0b56a;
+  --link:#2f5a43; --ok:#2f7a4a; --ok-bg:rgba(47,122,74,.12); --warn:#b0561a; --warn-bg:rgba(176,86,26,.12); --danger:#a83a2c;
+  --display:"Zilla Slab",Rockwell,"Roboto Slab",Georgia,serif;
+  --body:"Source Sans 3","Source Sans Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#17120e; --surface:#211a14; --ink:#efe6d8; --muted:#a8998a; --line:#3a2e24; --chip:#2c231b;
+    --accent:#d0843a; --accent-dk:#8a4a12; --accent-ink:#1a120c; --pine:#86c09c; --walnut:#0f0b08; --walnut-ink:#efe6d8;
+    --link:#8fc7a3; --ok:#6fc28d; --ok-bg:rgba(111,194,141,.14); --warn:#e39a5a; --warn-bg:rgba(227,154,90,.14); --danger:#e57a6e;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#17120e; --surface:#211a14; --ink:#efe6d8; --muted:#a8998a; --line:#3a2e24; --chip:#2c231b;
+  --accent:#d0843a; --accent-dk:#8a4a12; --accent-ink:#1a120c; --pine:#86c09c; --walnut:#0f0b08; --walnut-ink:#efe6d8;
+  --link:#8fc7a3; --ok:#6fc28d; --ok-bg:rgba(111,194,141,.14); --warn:#e39a5a; --warn-bg:rgba(227,154,90,.14); --danger:#e57a6e;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--walnut)}
+.pad{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{max-width:1240px;margin:0 auto}
+a{color:var(--link)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h2{font-size:25px;font-weight:700}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+header.top{background:repeating-linear-gradient(178.5deg,rgba(255,255,255,.028) 0 2px,transparent 2px 9px),repeating-linear-gradient(181deg,rgba(0,0,0,.18) 0 1px,transparent 1px 13px),var(--walnut);color:var(--walnut-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:38px;height:38px;flex:none}
+.brand h1{font-family:var(--display);font-weight:700;font-size:25px;letter-spacing:.06em;text-transform:uppercase;color:var(--walnut-ink);line-height:1}
+.brand h1 b{color:var(--hi);font-weight:700}
+.brand span{font-size:13px;opacity:.7;border-left:1px solid rgba(245,236,223,.25);padding-left:10px}
+@media (max-width:560px){.brand span{display:none}}
+.area-chip{all:unset;cursor:pointer;margin-left:auto;display:inline-flex;align-items:baseline;gap:6px;padding:5px 12px;border-radius:999px;border:1px solid rgba(245,236,223,.3);color:var(--walnut-ink);font-size:13px}
+.area-chip span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.area-chip b{font-family:var(--mono);color:var(--hi)}
+.area-chip:hover{border-color:var(--hi)}
+.area-chip:focus-visible{outline:2px solid var(--accent)}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.08);padding:4px;border-radius:8px;flex-wrap:wrap}
+.tabs button{all:unset;cursor:pointer;padding:6px 14px;border-radius:5px;font-weight:600;font-size:14px;color:var(--walnut-ink);opacity:.75}
+.tabs button[aria-selected="true"]{background:var(--walnut-ink);color:#2a1d14;opacity:1}
+.tabs button:focus-visible{outline:2px solid var(--accent)}
+.edge{height:9px;background:repeating-linear-gradient(90deg,transparent 0 37px,rgba(60,30,8,.22) 37px 38px,transparent 38px 113px),repeating-linear-gradient(180deg,rgba(255,255,255,.12) 0 1px,transparent 1px 3px),linear-gradient(#d39047,#a35a1a)}
+
+main{padding-block:24px 64px}
+section[role="tabpanel"]{display:flex;flex-direction:column;gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 1px 0 rgba(60,35,15,.06)}
+.grid-side{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:960px){.grid-side{grid-template-columns:1fr}}
+.side,.main-col{display:flex;flex-direction:column;gap:20px;min-width:0}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:12px;background:
+  radial-gradient(ellipse 60% 140% at 105% 50%,rgba(240,181,106,.16),transparent 70%),
+  repeating-linear-gradient(177deg,rgba(255,255,255,.03) 0 2px,transparent 2px 10px),
+  repeating-linear-gradient(182deg,rgba(0,0,0,.16) 0 1px,transparent 1px 15px),
+  #3a281a;color:var(--walnut-ink);padding:28px 26px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:center;border-bottom:6px solid var(--accent)}
+@media (max-width:820px){.hero{grid-template-columns:1fr;padding:22px 18px}}
+.hero h2{font-size:clamp(28px,4.4vw,40px);font-weight:700;line-height:1.08;color:#fffaf3}
+.hero h2 em{font-style:normal;color:var(--hi)}
+.hero p{margin-top:10px;max-width:56ch;opacity:.92;font-size:15.5px}
+.area-form{background:rgba(255,250,243,.07);border:1px solid rgba(245,236,223,.22);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.area-form .label{color:var(--walnut-ink);opacity:.75}
+.area-form{border:none!important;background:none!important;padding:0!important;box-shadow:none;border-radius:0}
+.area-title{font-family:var(--display);font-weight:700;font-size:21px;color:#fffaf3;line-height:1.2}
+.area-form .inline{background:rgba(255,250,243,.08);border:1px solid rgba(245,236,223,.28);border-radius:999px;padding:4px 4px 4px 18px;gap:6px;flex-wrap:nowrap;align-items:center;transition:border-color .15s,box-shadow .15s;max-width:420px}
+.area-form .inline:focus-within{border-color:var(--hi);box-shadow:0 0 0 3px rgba(240,181,106,.22)}
+.area-form input{background:transparent;color:#fffaf3;border:none;font-family:var(--mono);font-size:19px;letter-spacing:.1em;padding:6px 0;min-width:0;width:100%}
+.area-form input::placeholder{color:rgba(245,236,223,.45);letter-spacing:.04em;font-size:16px}
+.area-form input:focus{outline:none}
+.area-form .btn.tape{font-size:14.5px;padding:8px 18px;border-radius:999px;box-shadow:none;white-space:nowrap;flex:none}
+.area-form .btn.tape:active{transform:none}
+.area-form .hint{color:var(--walnut-ink);opacity:.75}
+.inline{display:flex;gap:8px;flex-wrap:wrap}
+.inline input{flex:1;min-width:110px}
+
+.field{display:flex;flex-direction:column;gap:5px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%}
+textarea{min-height:110px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 15px;border-radius:6px;font-weight:600;font-size:14px;background:var(--ink);color:var(--bg);text-align:center;text-decoration:none}
+.btn:hover{filter:brightness(1.12)}
+.btn.tape{background:var(--accent);color:var(--accent-ink);box-shadow:0 3px 0 var(--accent-dk);font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.02em;padding:9px 18px}
+.btn.tape:active{transform:translateY(2px);box-shadow:0 1px 0 var(--accent-dk)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{all:unset;cursor:pointer;font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--ink);font-family:var(--mono)}
+.chip:hover{background:var(--line)}
+.chip:focus-visible{outline:2px solid var(--accent)}
+
+/* sheets */
+.sheet{display:flex;flex-direction:column;gap:14px;border-top:5px solid var(--pine)}
+.form-tag{align-self:flex-start;font-family:var(--display);font-weight:700;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pine);border:2px solid currentColor;padding:1px 8px;border-radius:6px;transform:rotate(-1.5deg);opacity:.92}
+.head-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:var(--accent);color:var(--accent-ink)}
+.badge.dim{background:var(--chip);color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note-box{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+
+.table-wrap{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:bottom}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px;white-space:nowrap}
+td .note{display:block;font-size:12.5px;color:var(--muted)}
+th.grp{text-align:center;border-bottom:2px solid var(--line)}
+.better{color:var(--ok);font-weight:600}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.drv{border-left:3px solid var(--pine);padding:1px 0 1px 12px;font-size:14px}
+.drv b{display:block}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.ytype{display:flex;flex-direction:column;gap:4px;padding:11px 13px;border:1.5px dashed var(--line);border-radius:8px;font-size:13.5px;background:var(--bg)}
+.ytype strong{font-family:var(--display);font-weight:700;font-size:16px}
+.ytype a{margin-top:auto;padding-top:4px;font-weight:600}
+.pct{font-family:var(--display);font-size:26px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:76px 1fr;gap:2px 8px;font-size:13px}
+.kv span:nth-child(odd){font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+blockquote{margin:0;padding:12px 14px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 8px 8px 0;font-size:14px;white-space:pre-wrap}
+
+/* compact snapshot */
+.snap{gap:10px}
+.snap p.lede{font-size:14px;color:var(--muted)}
+.snap p.lede b{color:var(--ink)}
+.snap table{font-size:13.5px}
+.snap td,.snap th{padding:4px 7px}
+.snap td .nt{color:var(--muted);font-size:12px;margin-left:6px}
+.snap td.num{font-size:12.5px}
+.snap .qi{background:var(--ok-bg)}
+.share-panel{display:flex;flex-direction:column;gap:8px;border:1.5px solid var(--pine);border-radius:8px;padding:12px 14px;font-size:13.5px}
+.share-panel ul{margin:0;padding-left:18px;columns:2;column-gap:24px}
+@media (max-width:640px){.share-panel ul{columns:1}}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;font-size:13px}
+@media (max-width:760px){.mini{grid-template-columns:1fr}}
+.mini h3{font-size:14.5px;margin-bottom:2px}
+.mini ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px}
+.mini li b{font-weight:600}
+.buy{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:13px}
+.buy a{display:inline-flex;gap:5px;align-items:baseline;padding:3px 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);text-decoration:none;color:var(--ink)}
+.buy a:hover{border-color:var(--pine)}
+.buy a span{color:var(--muted);font-size:12px}
+.snap .note-box{font-size:12px;padding-top:8px}
+
+/* price history chart */
+.hist{display:flex;flex-direction:column;gap:12px}
+.hist-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.hist-ctrl .field{width:190px}
+.chart-wrap{position:relative}
+.seg{display:inline-flex;background:var(--chip);border-radius:7px;padding:3px;gap:2px}
+.seg button{all:unset;cursor:pointer;padding:4px 11px;border-radius:5px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(40,25,10,.15)}
+.seg button:focus-visible{outline:2px solid var(--accent)}
+.chart-wrap svg{width:100%;height:auto;display:block;overflow:visible}
+.chart-wrap .ax{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.chart-wrap .gl{stroke:var(--line);stroke-width:1}
+.chart-wrap .hl{fill:none;stroke:var(--pine);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart-wrap .gap{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:2 4}
+.chart-wrap .fl{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 4;stroke-linejoin:round}
+.chart-wrap .band{fill:var(--accent);opacity:.16}
+.chart-wrap .now{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.chart-wrap .lbl{font-family:var(--body);font-size:12px;font-weight:600;fill:var(--ink)}
+.chart-wrap .cross{stroke:var(--muted);stroke-width:1}
+.chart-wrap .dot{fill:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(40,25,10,.15);white-space:nowrap;transform:translate(-50%,-110%)}
+.tip b{font-family:var(--mono)}
+.key{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.key i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:6px}
+.fc-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:820px){.fc-stats{grid-template-columns:1fr 1fr}}
+.fc-stats .sum strong{font-size:22px}
+.up{color:var(--warn)} .down{color:var(--ok)}
+
+/* market overview */
+.overview{display:flex;flex-direction:column;gap:12px}
+.ov-card{gap:12px}
+.ov-card .note-box{font-size:12px}
+.lede-big{font-size:15px;line-height:1.5}
+.ov-h{font-size:15px;letter-spacing:.02em;color:var(--pine)}
+.points{display:grid;grid-template-columns:1fr;gap:10px}
+@media (max-width:960px) and (min-width:600px){.points{grid-template-columns:1fr 1fr;gap:10px 20px}}
+.pt{display:flex;flex-direction:column;gap:2px;font-size:13.5px;border-left:3px solid var(--accent);padding:1px 0 1px 11px}
+.pt b{font-family:var(--display);font-size:15px;font-weight:700}
+.tips{display:flex;flex-direction:column;gap:4px;font-size:13.5px;background:var(--bg);border-radius:8px;padding:8px 12px}
+.tips ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+
+/* item picker + detail */
+.pick{display:flex;flex-direction:column;gap:7px}
+.pick-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pick-row .label{width:86px;flex:none}
+@media (max-width:560px){.pick-row .label{width:100%}}
+.pick button{all:unset;cursor:pointer;font-size:13.5px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.pick button:hover{border-color:var(--pine)}
+.pick button[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--surface);font-weight:600}
+.pick button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.detail{border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+.dhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.dhead h3{font-size:19px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.tiles{grid-template-columns:1fr}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:1px}
+.tile strong{font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.tile .sub{font-size:12.5px;color:var(--muted)}
+.tile.win{background:var(--ok-bg);border-color:var(--ok)}
+.tile.win .sub{color:var(--ok);font-weight:600}
+.mathrow{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13.5px;color:var(--muted)}
+.mathrow b{font-family:var(--mono);color:var(--ink);font-weight:500;margin-left:4px}
+.qcheck{display:flex;gap:6px 12px;align-items:center;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px}
+.qcheck input{width:150px;background:var(--surface)}
+.qcheck #qc-out{flex:1;min-width:200px;font-size:13.5px}
+.verdict.good{color:var(--ok);font-weight:600}
+.verdict.bad{color:var(--warn);font-weight:600}
+.custom-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.custom-grid input{background:var(--surface)}
+@media (max-width:640px){.custom-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.snap tr[data-pick]:hover td{background:var(--chip)}
+
+/* converter + calculators */
+.calc{display:flex;flex-direction:column;gap:12px}
+.out{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.out div{background:var(--bg);border-radius:6px;padding:7px 10px;display:flex;flex-direction:column}
+.out b{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums}
+.explain{display:flex;flex-direction:column;gap:9px;font-size:13.5px}
+.explain b{display:block;font-size:14px}
+.offer td input{padding:6px 8px;text-align:right;font-family:var(--mono);font-size:13px}
+.offer td{border-bottom:none;padding:3px 4px;vertical-align:middle}
+.offer td:first-child{font-size:13px;padding-left:0}
+.offer tr.res td{border-top:1px solid var(--line);padding-top:8px;font-weight:600}
+
+/* local stores */
+.find-row{display:flex;justify-content:space-between;align-items:center;gap:10px 16px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.find-row > div{flex:1;min-width:240px;font-size:14px}
+.store-list{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.store-list label{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:start;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:var(--surface);cursor:pointer}
+.store-list .nm{font-weight:700}
+.store-list .meta{font-size:12.5px;color:var(--muted)}
+.store-list .low{color:var(--warn);font-size:12px;font-weight:600}
+.store-list a{font-size:12.5px;white-space:nowrap}
+td.pc.estv input{font-style:italic;color:var(--muted)}
+td.pc.estv{background-image:repeating-linear-gradient(90deg,transparent 0 6px,var(--chip) 6px 7px);background-size:100% 1px;background-repeat:no-repeat;background-position:bottom}
+.yh-sub{display:flex;gap:6px;align-items:baseline;padding-left:6px;font-family:var(--body);text-transform:none;letter-spacing:0;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.yh-sub a{font-size:11.5px}
+.est-note{font-size:13px;color:var(--warn);margin:0}
+
+/* my plans */
+.drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;border:2px dashed var(--line);border-radius:10px;padding:26px 16px;background:var(--bg);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--pine);background:var(--ok-bg)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop b{font-family:var(--display);font-size:17px}
+.pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.pg{all:unset;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted);text-align:center}
+.pg img{width:100%;aspect-ratio:3/4;object-fit:contain;background:#fff;border:2px solid var(--line);border-radius:6px;opacity:.55}
+.pg[aria-pressed="true"] img{border-color:var(--pine);opacity:1}
+.pg[aria-pressed="true"]::after{content:"✓";position:absolute;top:5px;right:6px;width:20px;height:20px;border-radius:50%;background:var(--pine);color:var(--surface);font-size:12px;display:flex;align-items:center;justify-content:center}
+.pg:focus-visible img{outline:2px solid var(--accent)}
+.facts{display:flex;flex-wrap:wrap;gap:8px}
+.fact{display:flex;flex-direction:column;padding:6px 11px;background:var(--bg);border-radius:6px;min-width:96px}
+.fact b{font-size:14.5px}
+.cost-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.cost-row{grid-template-columns:1fr}}
+.waste{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px}
+.waste input[type=range]{width:160px;accent-color:var(--accent);padding:0;border:none;background:none}
+.takeoff td.cat{font-family:var(--display);font-weight:700;font-size:14px;background:var(--bg);color:var(--pine)}
+.takeoff td .note{font-size:12px}
+.fut{display:flex;flex-direction:column;gap:7px}
+.fut-row{display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:13px}
+.fut-row .track{height:10px;background:var(--chip);border-radius:3px;overflow:hidden}
+.fut-row .track span{display:block;height:100%;background:var(--accent);opacity:.75}
+.fut-row:first-child .track span{background:var(--pine);opacity:1}
+.fut-row .mono{text-align:right;white-space:nowrap}
+.fut-row .chg{font-size:11.5px;margin-left:4px}
+.watch-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.watch-list li{border-left:3px solid var(--line);padding:1px 0 1px 10px;font-size:13.5px}
+.watch-list li.high{border-color:var(--danger)} .watch-list li.medium{border-color:var(--warn)} .watch-list li.low{border-color:var(--pine)}
+.watch-list b{display:block}
+.sev{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+.sev.high{color:var(--danger)} .sev.medium{color:var(--warn)} .sev.low{color:var(--pine)}
+.plan-card{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding:10px;align-items:start}
+.plan-card img{width:64px;height:80px;object-fit:cover;border-radius:5px;background:#fff;border:1px solid var(--line)}
+.plan-card .ph{width:64px;height:80px;border-radius:5px;background:var(--chip)}
+.plan-card button.open{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.plan-card button.open:focus-visible{outline:2px solid var(--accent)}
+
+.cost-row .sum strong{font-size:22px}
+
+/* my yards */
+.myyards{display:flex;flex-direction:column;gap:10px}
+.my-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.my-list li{border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:var(--bg);display:flex;flex-direction:column;gap:6px}
+.my-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.my-top b{font-family:var(--display);font-size:15.5px}
+.my-meta{font-size:12.5px;color:var(--muted)}
+.my-terms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.my-terms label{display:flex;flex-direction:column;gap:2px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.my-terms input{padding:4px 7px;font-size:13px;font-family:var(--mono);text-align:right;background:var(--surface)}
+.my-empty{font-size:13px;color:var(--muted);border:1.5px dashed var(--line);border-radius:8px;padding:12px}
+.star{all:unset;cursor:pointer;color:var(--muted);font-size:12px}
+.star.on{color:var(--accent);font-weight:600}
+.star:hover{color:var(--accent)}
+.star:focus-visible{outline:2px solid var(--accent)}
+
+/* compare */
+.job-bar{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:10px;align-items:end}
+@media (max-width:720px){.job-bar{grid-template-columns:1fr 1fr}.job-bar .actions{grid-column:1/-1}}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:820px){.summary{grid-template-columns:1fr}}
+.sum{background:var(--bg);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.sum strong{font-family:var(--display);font-size:28px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.sum .sub{font-size:13px;color:var(--muted)}
+.sum.win{background:var(--ok-bg)}
+.bars{display:flex;flex-direction:column;gap:6px}
+.barrow{display:grid;grid-template-columns:minmax(90px,170px) minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:13.5px}
+.barrow .track{height:12px;background:var(--chip);border-radius:3px;overflow:hidden}
+.barrow .track span{display:block;height:100%;background:var(--muted);opacity:.6}
+.barrow.best .track span{background:var(--ok);opacity:1}
+.barrow .mono{text-align:right}
+.barrow .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+table.mx{font-size:13.5px;min-width:640px}
+table.mx td,table.mx th{padding:4px 5px}
+table.mx input{padding:5px 7px;font-size:13.5px;border-color:transparent;background:transparent;border-radius:4px}
+table.mx input:hover{border-color:var(--line)}
+table.mx input:focus{border-color:var(--accent);background:var(--surface);outline:none}
+table.mx .n{text-align:right;font-family:var(--mono)}
+table.mx th.yh{min-width:120px;vertical-align:bottom}
+table.mx th.yh input{font-family:var(--display);font-size:14px;font-weight:600;text-transform:none;letter-spacing:.02em;color:var(--ink);padding:4px 6px}
+.yh-top{display:flex;align-items:center;gap:2px}
+td.pc{background:transparent}
+td.pc.best{background:var(--ok-bg)}
+td.pc.best input{color:var(--ok);font-weight:600}
+td.pc.over input{color:var(--warn)}
+td.pc .ln{display:block;text-align:right;font-family:var(--mono);font-size:11px;color:var(--muted);padding-right:7px;min-height:15px}
+td.est{color:var(--muted);font-size:12px;padding-top:9px!important}
+td.desc{min-width:200px}
+tfoot td{background:var(--bg);border-bottom:1px solid var(--line)}
+tfoot tr.tot td{font-weight:700;font-size:14px;background:var(--chip)}
+tfoot tr.tot td.win{color:var(--ok)}
+tfoot .flab{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:right;padding-right:8px!important}
+.x{all:unset;cursor:pointer;color:var(--muted);font-size:16px;line-height:1;padding:3px 6px;border-radius:4px}
+.x:hover{color:var(--danger);background:var(--chip)}
+.x:focus-visible{outline:2px solid var(--accent)}
+.legend-row{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.legend-row i{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+.tools-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+details.box{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px}
+details.box summary{cursor:pointer;font-weight:600}
+details.box[open] summary{margin-bottom:8px}
+details.box .stack{display:flex;flex-direction:column;gap:8px}
+
+.saved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.side .saved-grid{grid-template-columns:1fr}
+.saved{display:flex;flex-direction:column;gap:8px;padding:14px}
+.saved button.open{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.saved button.open:focus-visible{outline:2px solid var(--accent)}
+.saved .meta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.linkbtn{all:unset;cursor:pointer;font-size:13px;color:var(--muted)}
+.linkbtn:hover{color:var(--danger)}
+.linkbtn.danger{color:var(--danger);font-weight:600}
+.empty{display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding:22px;border:1.5px dashed var(--line);border-radius:8px}
+.empty p{max-width:56ch;color:var(--muted)}
+
+.loading{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding-block:28px}
+.saw{width:180px;height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--accent) 0 10px,var(--chip) 10px 20px);background-size:40px 100%;animation:slide .9s linear infinite}
+@keyframes slide{to{background-position:40px 0}}
+@media (prefers-reduced-motion:reduce){.saw{animation:none}}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20;max-width:calc(100% - 32px)}
+.toast.on{opacity:1}
+</style>
+
+<header class="top">
+  <div class="pad"><div class="inner bar">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#7e430f"/><circle cx="20" cy="20" r="16" fill="#e2a965"/><g fill="none" stroke="#a8682a" stroke-width="1.3"><circle cx="21" cy="19.5" r="12.5"/><circle cx="21.3" cy="19.2" r="9"/><circle cx="21.6" cy="19" r="5.6"/><circle cx="21.8" cy="18.9" r="2.6"/></g><circle cx="22" cy="18.8" r="1" fill="#7e430f"/><path d="M22 19 L33 26" stroke="#7e430f" stroke-width="1.2"/></svg>
+      <h1>Lumber <b>Economics</b></h1><span>Prices, yards and discounts for builders</span>
+    </div>
+    <button class="area-chip" id="area-chip" type="button" title="Change your job area"><span>Area</span> <b>Set ZIP</b></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="tab-market" aria-selected="true" aria-controls="panel-market">Market</button>
+      <button role="tab" id="tab-compare" aria-selected="false" aria-controls="panel-compare">Quotes &amp; Discounts</button>
+      <button role="tab" id="tab-plans" aria-selected="false" aria-controls="panel-plans">My Plans</button>
+    </nav>
+  </div></div>
+  <div class="edge" aria-hidden="true"></div>
+</header>
+
+<main class="pad"><div class="inner">
+
+  <!-- MARKET -->
+  <section role="tabpanel" id="panel-market" aria-labelledby="tab-market">
+    <div class="hero">
+      <div>
+        <h2>Lumber pricing for your job site, <em>in one place.</em></h2>
+        <p>Current market pricing for framing lumber, panels and engineered wood in your area, side-by-side quotes from local suppliers, and the contractor discounts available to you.</p>
+      </div>
+      <form class="area-form" id="area-form">
+        <label for="zip" class="area-title">Enter your job site ZIP code</label>
+        <div class="inline">
+          <input id="zip" inputmode="numeric" maxlength="10" placeholder="ZIP code" aria-label="ZIP code">
+          <button class="btn tape" id="snap-btn" type="submit">Price my area</button>
+        </div>
+        <p class="hint" id="snap-hint">Uses your ZIP for market pricing, the discount guide and the quote comparison.</p>
+      </form>
+    </div>
+
+    <div class="grid-side">
+      <div class="main-col">
+      <div class="card sheet snap" id="snapshot" aria-live="polite"></div>
+    <div class="card sheet hist" id="hist">
+      <div class="head-row">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="form-tag">Price history &amp; outlook</span><h2 style="font-size:21px">Framing lumber, $ per MBF</h2></div>
+        <div class="actions"><div class="seg" id="range" role="radiogroup" aria-label="Time range"></div><span class="badge dim" id="fc-badge">Trend model</span></div>
+      </div>
+      <div class="hist-ctrl">
+        <label class="field"><span class="label">Price today, $/MBF</span><input id="anchor" inputmode="decimal"></label>
+        <button class="btn sm ghost" id="ai-fc">Ask Claude for an outlook</button>
+        <p class="hint" style="flex:1;min-width:220px"><span id="live-line">Built-in history ends mid-2025 until the live feed is connected. Enter today's framing lumber futures or composite price; the forecast starts from it.</span></p>
+      </div>
+      <div class="key"><span><i style="border-color:var(--pine)"></i>History (approximate quarterly average)</span><span><i style="border-color:var(--accent);border-top-style:dashed"></i>Forecast, shaded range is the likely band</span></div>
+      <div class="chart-wrap" id="chart"></div>
+      <div class="fc-stats" id="fc-stats"></div>
+      <div id="fc-notes"></div>
+      <details class="box"><summary>Show the numbers</summary><div class="table-wrap"><table id="hist-table"></table></div></details>
+      <p class="note-box">History is an approximate national framing lumber benchmark (near-month futures, quarterly averages) from Claude's general knowledge, not an official data feed. The forecast is an estimate, not a guarantee: the trend model assumes prices drift back toward their long-run level with a spring bump, and Claude's outlook reflects knowledge that can lag current events.</p>
+    </div>
+      </div>
+      <div class="side"><div class="card sheet ov-card" id="overview" aria-live="polite"></div></div>
+    </div>
+
+  </section>
+
+  <!-- COMPARE -->
+  <section role="tabpanel" id="panel-compare" aria-labelledby="tab-compare" hidden>
+    <div class="card sheet">
+      <div class="head-row">
+        <div style="display:flex;flex-direction:column;gap:6px"><span class="form-tag">Quote comparison</span><h2 id="job-title">Compare local stores</h2></div>
+        <span class="badge dim" id="job-badge"></span>
+      </div>
+      <div class="job-bar">
+        <label class="field"><span class="label">Job name</span><input id="job-name" maxlength="80" placeholder="e.g. Miller garage, framing package"></label>
+        <label class="field"><span class="label">Job ZIP</span><input id="job-zip" inputmode="numeric" maxlength="10" placeholder="ZIP"></label>
+        <div class="actions"><button class="btn tape" id="save-job">Save</button><button class="btn ghost" id="new-job">New comparison</button></div>
+      </div>
+
+      <div class="find-row">
+        <div><b>Start with the stores near your job.</b> <span class="hint">Finds big-box stores and lumber yards near the job ZIP, adds them as columns and fills in estimated prices until you enter real quotes.</span></div>
+        <button class="btn tape" id="find-btn">Find local stores</button>
+      </div>
+      <div class="share-panel" id="find-panel" hidden></div>
+
+      <div class="summary" id="summary"></div>
+      <div class="bars" id="bars"></div>
+      <p class="est-note" id="est-note" hidden></p>
+
+      <div class="tools-row">
+        <div class="actions">
+          <button class="btn sm" id="add-item">+ Item</button>
+          <button class="btn sm" id="add-yard">+ Yard</button>
+          <button class="btn sm ghost" id="est-btn">Estimate area prices</button>
+          <button class="btn sm ghost" id="copy-rfq">Copy quote request</button>
+          <button class="btn sm ghost" id="share-btn">Share to area index</button>
+        </div>
+        <div class="legend-row"><span><i style="background:var(--ok-bg);outline:1px solid var(--ok)"></i>Lowest net price on the line</span><span><i style="background:var(--warn)"></i>More than 10% over the area estimate</span><span><i style="background:transparent;border:1.5px dashed var(--muted)"></i><em>Italic</em> = estimated, type a quote to replace</span></div>
+      </div>
+      <div class="share-panel" id="share-panel" hidden></div>
+      <div class="table-wrap"><table class="mx" id="mx"></table></div>
+      <p class="hint">Enter each yard's unit price as quoted. The yard's account discount, delivery and tax are applied in the footer. Lowest net price per line is highlighted after discounts.</p>
+
+      <details class="box" id="paste-box">
+        <summary>Paste a takeoff</summary>
+        <div class="stack">
+          <p class="hint">Paste a material list from your estimate or plans, one item per line. Items are added to the table.</p>
+          <textarea id="paste-text" placeholder="120 2x4x92-5/8 SPF studs&#10;24 2x6x16 #2 SYP&#10;48 sheets 7/16 OSB&#10;3 1-3/4x11-7/8 LVL 20ft"></textarea>
+          <div class="actions"><button class="btn sm" id="paste-btn">Add to table</button><span class="hint" id="paste-hint"></span></div>
+        </div>
+      </details>
+      <details class="box">
+        <summary>Preview the quote request</summary>
+        <textarea id="rfq" readonly style="min-height:180px;font-size:13px"></textarea>
+      </details>
+    </div>
+
+    <div class="grid-side">
+        <div class="card sheet" id="disc" aria-live="polite"></div>
+      <div class="side">
+        <div class="card calc">
+          <span class="form-tag">Offer check</span>
+          <h3>Which offer is cheaper?</h3>
+          <p class="hint">A bigger discount can still cost more once delivery, payment terms and tax are in. Put two offers on the same job side by side.</p>
+          <table class="offer" id="offer">
+            <thead><tr><th></th><th class="num">Offer A</th><th class="num">Offer B</th></tr></thead>
+            <tbody>
+              <tr><td>Quoted materials $</td><td><input data-o="a.q" inputmode="decimal" value="18500"></td><td><input data-o="b.q" inputmode="decimal" value="17900"></td></tr>
+              <tr><td>Account discount %</td><td><input data-o="a.d" inputmode="decimal" value="10"></td><td><input data-o="b.d" inputmode="decimal" value="5"></td></tr>
+              <tr><td>Pay-early discount %</td><td><input data-o="a.e" inputmode="decimal" value="2"></td><td><input data-o="b.e" inputmode="decimal" value="0"></td></tr>
+              <tr><td>Delivery $</td><td><input data-o="a.f" inputmode="decimal" value="0"></td><td><input data-o="b.f" inputmode="decimal" value="150"></td></tr>
+              <tr><td>Sales tax %</td><td><input data-o="a.t" inputmode="decimal" value="8.25"></td><td><input data-o="b.t" inputmode="decimal" value="8.25"></td></tr>
+            </tbody>
+            <tbody id="offer-out"></tbody>
+          </table>
+          <p class="hint" id="offer-verdict"></p>
+        </div>
+        <div class="card myyards">
+          <div class="tools-row"><span class="form-tag">My yards</span><span class="hint" id="my-count"></span></div>
+          <p class="hint">The stores you buy from, with your account discount, delivery fee and tax. Every new comparison starts with them.</p>
+          <ul class="my-list" id="my-list"></ul>
+          <div class="actions"><button class="btn sm" id="my-use">Add my yards to this comparison</button></div>
+          <details class="box" id="my-add-box"><summary>Add a yard</summary>
+            <form class="stack" id="my-add">
+              <label class="field"><span class="label">Store name</span><input id="my-name" maxlength="60" placeholder="e.g. Smith Lumber, Main St"></label>
+              <div class="row2">
+                <label class="field"><span class="label">Area or address</span><input id="my-area" maxlength="80" placeholder="optional"></label>
+                <label class="field"><span class="label">Type</span><select id="my-kind"><option>Independent yard</option><option>Big-box</option><option>Regional dealer</option><option>Specialty</option><option>Wholesale</option></select></label>
+              </div>
+              <div class="row3">
+                <label class="field"><span class="label">Discount %</span><input id="my-disc" inputmode="decimal" placeholder="0"></label>
+                <label class="field"><span class="label">Delivery $</span><input id="my-del" inputmode="decimal" placeholder="0"></label>
+                <label class="field"><span class="label">Tax %</span><input id="my-tax" inputmode="decimal" placeholder="0"></label>
+              </div>
+              <button class="btn sm tape" type="submit">Save yard</button>
+            </form>
+          </details>
+          <p class="hint">You can also press ☆ under any store name in the comparison table to save it here.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <h3>Saved comparisons</h3>
+          <div id="saved"></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- MY PLANS -->
+  <section role="tabpanel" id="panel-plans" aria-labelledby="tab-plans" hidden>
+    <div class="grid-side">
+      <div class="main-col">
+        <form class="card sheet" id="plan-form">
+          <div class="head-row"><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="form-tag">New plan</span><h2 style="font-size:21px">Estimate a house from its plans</h2></div></div>
+          <label class="drop" id="drop">
+            <input type="file" id="plan-files" multiple accept="image/jpeg,image/png,image/webp,application/pdf">
+            <b>Drop plan sheets here or choose files</b>
+            <span class="hint" id="drop-hint">PDF or photos/scans of the sheets. Floor plans, elevations, sections and framing or foundation plans help most.</span>
+          </label>
+          <div id="pages-wrap" hidden>
+            <div class="tools-row"><span class="label" id="pages-count"></span><button type="button" class="linkbtn" id="pages-clear">Clear</button></div>
+            <div class="pages" id="pages"></div>
+          </div>
+          <div class="row2">
+            <label class="field"><span class="label">Plan name</span><input id="plan-name" maxlength="80" placeholder="e.g. Hillside 2-story, Lot 14"></label>
+            <label class="field"><span class="label">Build site ZIP</span><input id="plan-zip" inputmode="numeric" maxlength="10" placeholder="ZIP"></label>
+          </div>
+          <label class="field"><span class="label">Anything the sheets don't show</span><textarea id="plan-details" style="min-height:70px" placeholder="Optional. e.g. 2x6 exterior walls, 9 ft plates, slab on grade, roof trusses by supplier. Or describe the whole house here if you have no files."></textarea></label>
+          <div class="actions"><button class="btn tape" id="plan-go" type="submit">Analyze plans</button><span class="hint" id="plan-hint">Plan images go to Claude for this estimate and are not stored. A small preview is saved with the plan.</span></div>
+        </form>
+        <div class="card sheet" id="plan-result" aria-live="polite"></div>
+      </div>
+      <div class="side">
+        <div class="card sheet" id="plan-future"></div>
+        <div class="card sheet" id="plan-watch"></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <h3>Saved plans</h3>
+          <div id="plan-saved"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div></main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => { const n = parseFloat(String(v ?? '').replace(/[^0-9.\-]/g,'')); return isFinite(n) ? n : 0; };
+const arr = v => Array.isArray(v) ? v : [];
+const money = n => '$' + Math.round(n).toLocaleString();
+const money2 = n => '$' + (Math.round(n*100)/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const unitMoney = n => n >= 100 ? money(n) : money2(n);
+const range = (a,b) => (!a && !b) ? '—' : (Math.abs(a-b) < .005 ? unitMoney(a) : unitMoney(a) + '–' + unitMoney(b));
+const fmtDate = t => new Date(t).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+const newId = () => Math.random().toString(36).slice(2,10);
+const mapsLink = (q, zip) => 'https://www.google.com/maps/search/' + encodeURIComponent(q + (zip ? ' near ' + zip : ''));
+let tt; const toast = m => { const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),2600); };
+const store = {
+  get(k){ try{ const v=localStorage.getItem('sh.'+k); return v?JSON.parse(v):null; }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem('sh.'+k, JSON.stringify(v)); }catch(e){} }
+};
+const aiError = err => { const c=err&&err.code;
+  if(c==='cancelled') return 'Stopped.';
+  if(c==='not_granted'||c==='sampling_disabled') return 'Claude isn\'t allowed on this page, so estimates are off.';
+  if(c==='rate_limited') return 'Too many requests right now. Wait a minute and try again.';
+  return 'The estimate didn\'t come through. Try again.'; };
+const loading = (title, sub) => `<div class="loading"><div class="saw"></div><h3>${esc(title)}</h3><p class="hint">${esc(sub)}</p></div>`;
+
+/* ---------- market basket ---------- */
+const BASKET = [
+  {k:'stud',    g:'Framing',    short:'2×4 stud',      name:'2×4 stud, 92⅝ in',                  unit:'ea',    bf:16/3, len:92.625/12},
+  {k:'2x4x16',  g:'Framing',    short:'2×4 × 16',      name:'2×4 × 16 ft',                        unit:'ea',    bf:32/3, len:16},
+  {k:'2x6x8',   g:'Framing',    short:'2×6 × 8',       name:'2×6 × 8 ft',                         unit:'ea',    bf:8,    len:8},
+  {k:'2x6x16',  g:'Framing',    short:'2×6 × 16',      name:'2×6 × 16 ft',                        unit:'ea',    bf:16,   len:16},
+  {k:'2x10x16', g:'Framing',    short:'2×10 × 16',     name:'2×10 × 16 ft',                       unit:'ea',    bf:80/3, len:16},
+  {k:'2x12x16', g:'Framing',    short:'2×12 × 16',     name:'2×12 × 16 ft',                       unit:'ea',    bf:32,   len:16},
+  {k:'pt4x4',   g:'Treated',    short:'4×4 × 8',       name:'4×4 × 8 ft treated, ground contact', unit:'ea',    bf:32/3, len:8},
+  {k:'pt2x6',   g:'Treated',    short:'2×6 × 12',      name:'2×6 × 12 ft treated',                unit:'ea',    bf:12,   len:12},
+  {k:'osb',     g:'Panels',     short:'OSB 7/16',      name:'7/16 in OSB sheathing, 4×8',         unit:'sheet', bf:0},
+  {k:'cdx',     g:'Panels',     short:'CDX 1/2',       name:'1/2 in CDX plywood, 4×8',            unit:'sheet', bf:0},
+  {k:'subfloor',g:'Panels',     short:'Subfloor 23/32',name:'23/32 in T&G subfloor, 4×8',         unit:'sheet', bf:0},
+  {k:'lvl',     g:'Engineered', short:'LVL 11⅞',       name:'LVL 1¾ × 11⅞ in',                    unit:'LF',    bf:0},
+];
+
+const EX_SNAP = {
+  example:true, zip:'78704', region:'Austin, Texas area',
+  species:'Southern Yellow Pine (SYP) dominates framing and treated lumber here, with SPF studs common at big-box stores.',
+  summary:'Central Texas usually prices framing lumber close to the national average. Nearby Southern pine mills keep SYP and treated stock competitive, while SPF studs and long engineered lumber carry more freight. Strong metro building activity keeps yards busy and less eager to discount small orders.',
+  basket:{stud:[3.85,4.40,3.60,4.30],'2x4x16':[9.20,10.80,8.60,10.40],'2x6x8':[6.40,7.60,6.10,7.30],'2x6x16':[13.40,16.20,12.60,15.40],'2x10x16':[24,30,22,28],'2x12x16':[31,39,29,37],pt4x4:[11,14,10.50,13.50],pt2x6:[11.50,14.50,11,14],osb:[15,19,14,18],cdx:[30,38,28,36],subfloor:[38,48,36,46],lvl:[7.50,9.50,7,9]},
+  notes:{stud:'SPF at big-box, often SYP at yards','2x12x16':'Long, wide SYP is tighter in supply',pt4x4:'Check for ground-contact rating',lvl:'Per linear foot, cut lengths cost more'},
+  points:{
+    species:'Southern Yellow Pine is the local framing species: #2 SYP for joists and rafters, with SPF studs at the big-box stores. SYP is stiffer for long spans but checks and twists more if it sits wet.',
+    commodity:'Prices follow the national futures market with a lag of a few weeks. SPF reacts more to Canadian supply and duties; SYP follows Southern mill output.',
+    layers:'Most yards here buy through Southern pine distributors and regional reloads. Large regional dealers buy closer to the mill, so they can beat independents on whole-house packages.',
+    grade:'16 ft and longer SYP, wide 2×12s and #1 grade carry a clear premium per board foot. Studs and 8 ft stock are the cheapest per board foot.',
+    quotes:'With steady metro building, yards hold commodity prices for about 7–14 days. Ask for the hold date in writing on any package over a few thousand dollars.',
+    freight:'Being close to Southern pine mills keeps SYP freight low. SPF, Douglas fir and engineered lumber travel farther and carry more freight in the price.',
+  },
+  drivers:[
+    {factor:'Nearby Southern pine mills',effect:'Keeps SYP framing and treated lumber cheaper here than in the West or Northeast.'},
+    {factor:'Duties on Canadian softwood',effect:'Raise SPF prices. Studs and SPF dimensional lumber follow these more than SYP does.'},
+    {factor:'Metro housing starts',effect:'When local starts are high, yards hold firm on price and shorten quote holds.'},
+    {factor:'Hurricane season along the Gulf',effect:'Can spike OSB and plywood demand from late summer into fall.'},
+  ],
+  yards:[
+    {type:'Independent lumber yard',best:'Full framing packages, better grades, job pricing with an account.',pricing:'Counter prices near big-box. Job quotes often 5–15% below.',q:'lumber yard'},
+    {type:'Big-box pro desk',best:'Fill-ins, small orders and fast pickup.',pricing:'Shelf price is the ceiling. Volume quotes on bigger orders.',q:'home improvement store pro desk'},
+    {type:'Regional building supply',best:'Large packages with boom delivery, trusses and engineered lumber.',pricing:'Competitive on whole-house packages with an outside sales rep.',q:'building supply'},
+    {type:'Truss and EWP supplier',best:'LVLs, I-joists and trusses cut to your plans.',pricing:'Quoted per job from your plans.',q:'truss manufacturer'},
+  ],
+  tips:['Price SYP against SPF on studs and joists. The cheaper species changes with the market.','Ask yards for unit pricing on full lifts. A lift of 2×4s is often cheaper per piece.','Get a fresh quote if your start date slips more than two weeks.'],
+  asOf:'Example data'
+};
+
+const EX_DISC = {
+  example:true, zip:'78704', region:'Austin, Texas area',
+  programs:[
+    {type:'Independent lumber yard',low:5,high:15,qualifies:'A contractor account with a credit application. Better pricing as your yearly volume grows.',terms:'Net 30. Some offer 1–2% off for paying by the 10th.',delivery:'Often free in their local zone above a minimum order.',tip:'Ask for job pricing on the whole package instead of a discount off counter prices.',q:'lumber yard'},
+    {type:'Big-box pro program',low:2,high:10,qualifies:'Free pro sign-up. Tiers based on yearly spend.',terms:'Store card or commercial account. Volume quotes on larger orders.',delivery:'Flatbed delivery fee, more for boom placement.',tip:'Request a volume quote through the pro desk for any order above a few thousand dollars.',q:'home improvement store pro desk'},
+    {type:'Regional building supply',low:8,high:20,qualifies:'Steady volume and a sales rep relationship.',terms:'Net 30, sometimes net 10th prox.',delivery:'Boom and lift delivery included on packages.',tip:'Bid them against the independent yard on the same takeoff.',q:'building supply'},
+    {type:'Wholesale or reload',low:15,high:30,qualifies:'Usually truckload or full-unit buys only. Many sell only to dealers.',terms:'Prepay or short terms.',delivery:'Truckload freight, you unload.',tip:'Only worth it for large or repeat jobs where you can store full units.',q:'lumber wholesale'},
+  ],
+  levers:[
+    {lever:'Whole-package quotes',detail:'Quoting the full takeoff earns better pricing than buying piece by piece.'},
+    {lever:'Paying fast',detail:'Early-pay discounts of 1–2% beat most extra-discount negotiations.'},
+    {lever:'Picking up',detail:'Will-call orders can save a delivery fee on small loads.'},
+    {lever:'Quote holds',detail:'Lock commodity pricing with a written hold date before you sign your client.'},
+    {lever:'Loyalty',detail:'Steady volume with one or two yards gets better job pricing than spreading every order around.'},
+  ],
+  script:'Hi, I\'m a contractor working mostly in this area, doing about [$ amount] a year in lumber. I\'d like to open an account. What pricing level and terms would that get me, and do you offer job pricing on full packages? I\'d also like to know your delivery minimums and how long you hold quotes.',
+  watch:['Restocking fees of 15–25% on returns','Small-order or partial-load delivery charges','Fuel surcharges added to delivery','Card processing fees on top of the discount','Quotes that expire before your start date'],
+  asOf:'Example data'
+};
+
+/* ---------- state ---------- */
+const cap = {sample:null, db:null, uid:null};
+let zip = store.get('zip') || '';
+let snap = store.get('snap') || EX_SNAP;
+let disc = store.get('disc') || EX_DISC;
+let snapCtl=null, discCtl=null, estCtl=null;
+
+function exampleJob(){
+  const it = (desc,qty,unit)=>({id:newId(),desc,qty,unit});
+  const items=[it('2×4 × 92⅝ in stud',180,'ea'),it('2×4 × 16 ft #2',40,'ea'),it('2×6 × 16 ft #2',36,'ea'),it('2×10 × 16 ft #2',22,'ea'),it('7/16 in OSB 4×8',64,'sheet'),it('23/32 in T&G subfloor 4×8',28,'sheet'),it('LVL 1¾ × 11⅞ in',40,'LF')];
+  const yards=[
+    {id:newId(),name:'Independent yard',disc:10,delivery:0,tax:8.25},
+    {id:newId(),name:'Big-box pro desk',disc:3,delivery:79,tax:8.25},
+    {id:newId(),name:'Regional supply',disc:12,delivery:0,tax:8.25}];
+  const P=[[4.25,10.30,15.20,27.50,17.50,45,9.10],[4.05,10.10,15.40,28.90,16.40,44,9.60],[4.35,10.60,15.60,27.20,18.10,47,8.70]];
+  const prices={}; items.forEach((x,i)=>{ prices[x.id]={}; yards.forEach((y,j)=>{ prices[x.id][y.id]=P[j][i]; }); });
+  return {id:null, example:true, name:'Example: two-car garage framing package', zip:'78704', items, yards, prices, est:{}, estp:{}, createdAt:0};
+}
+function blankJob(){
+  return {id:null, example:false, name:'', zip, items:[{id:newId(),desc:'',qty:1,unit:'ea'}],
+    yards: myYards.length ? myYards.slice(0,6).map(yardFromSaved) : [{id:newId(),name:'Yard A',disc:0,delivery:0,tax:0},{id:newId(),name:'Yard B',disc:0,delivery:0,tax:0}], prices:{}, est:{}, estp:{}, createdAt:0};
+}
+let job = exampleJob();
+let saved = [];
+let confirmDel = null;
+
+/* ---------- market snapshot ---------- */
+const POINTS=[['species','Species & grades'],['commodity','Market link'],['layers','Who sets your price'],['grade','Length & grade premiums'],['quotes','Quote holds'],['freight','Freight & distance']];
+const GENERIC_POINTS={
+  species:'Framing species vary by region. Ask which species and grade a yard stocks before comparing prices.',
+  commodity:'Framing lumber and panels follow the futures market and mill output. Yard prices usually trail big swings by a few weeks.',
+  layers:'Mill → wholesaler or reload → dealer or yard → you. Each layer adds margin; big buyers skip layers and pay closer to mill prices.',
+  grade:'16 ft and longer, #1 and better grades, and kiln-dried or treated stock cost more per board foot than 8 ft #2.',
+  quotes:'Yards often hold commodity prices for only 7 to 30 days. Ask for the hold date in writing.',
+  freight:'Species from distant mills and areas far from rail or a distribution yard cost more.'};
+let selItem = store.get('selItem') || 'stud';
+const checkVals = {};
+const cust = {t:'2', w:'4', l:'8', p:'', m:''};
+const unitWord = b => b.unit==='ea' ? 'piece' : b.unit==='sheet' ? 'sheet' : 'linear ft';
+function renderSnapshot(){
+  computeIndex();
+  const S=snap, el=$('#snapshot');
+  const z3=(S.example?zip:S.zip||zip).slice(0,3);
+  const where=S.example?'':S.zip;
+  const groups=[...new Set(BASKET.map(b=>b.g))];
+  const rows=BASKET.map(b=>{ const v=S.basket[b.k]||[0,0,0,0]; const yMid=(v[2]+v[3])/2, bMid=(v[0]+v[1])/2;
+    const better = yMid && bMid ? (yMid < bMid ? 'yard' : yMid > bMid ? 'box' : '') : '';
+    return `<tr data-pick="${b.k}" style="cursor:pointer"><td>${esc(b.name)}</td><td class="num muted">${esc(b.unit)}</td>
+      <td class="num ${better==='box'?'better':''}">${range(v[0],v[1])}</td><td class="num ${better==='yard'?'better':''}">${range(v[2],v[3])}</td>
+      <td class="num qi">${IDX[b.k]?`<b>${money2(IDX[b.k].med)}</b> <span class="muted">(${IDX[b.k].n})</span>`:'<span class="muted">—</span>'}</td></tr>`; }).join('');
+  el.innerHTML=`
+    <div class="head-row">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="form-tag">Market pricing</span><h2 style="font-size:21px">${esc(S.region||'Your area')}${S.zip?` <span class="muted mono" style="font-size:13px">${esc(S.zip)}</span>`:''}</h2></div>
+      ${S.example?'<span class="badge">Example. Enter your ZIP above</span>':`<span class="badge dim">${esc(S.asOf||'Estimate')}</span>`}
+    </div>
+    <div class="pick" role="group" aria-label="Pick an item">
+      ${groups.map(g=>`<div class="pick-row"><span class="label">${g}</span>${BASKET.filter(b=>b.g===g).map(b=>`<button type="button" data-pick="${b.k}" aria-pressed="${selItem===b.k}">${esc(b.short)}</button>`).join('')}</div>`).join('')}
+      <div class="pick-row"><span class="label">Other</span><button type="button" data-pick="custom" aria-pressed="${selItem==='custom'}">Any size: board-foot calculator</button></div>
+    </div>
+    <div class="detail" id="snap-detail"></div>
+    <details class="box"><summary>All items at a glance</summary>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Item</th><th class="num">Unit</th><th class="num">Big-box</th><th class="num">Lumber yard</th><th class="num qi">Real quotes</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>
+      <p class="hint" style="margin-top:6px">Green marks the cheaper channel. Tap a row to open it above.</p>
+    </details>
+    <div class="buy"><span class="label">Find near ${esc(where||'you')}</span>${arr(S.yards).map(y=>`<a href="${mapsLink(y.q||y.type, where)}" target="_blank" rel="noopener" title="${esc(y.best+' '+y.pricing)}">${esc(y.type)} <span>↗</span></a>`).join('')}</div>`;
+  $('#overview').innerHTML=`
+    <div class="overview">
+      <span class="form-tag">About this market</span>
+      <p class="lede-big">${esc(S.summary)}</p>
+      <h3 class="ov-h">How lumber is priced ${S.example||!S.region?'here':'in '+esc(S.region)}</h3>
+      <div class="points">${POINTS.map(([k,t])=>{ const txt=(S.points&&S.points[k])||(k==='species'&&S.species)||GENERIC_POINTS[k]; return `<div class="pt"><b>${t}</b><span>${esc(txt)}</span></div>`; }).join('')}</div>
+      ${arr(S.drivers).length&&!(S.points&&Object.keys(S.points).length)?`<p class="hint"><b style="color:var(--ink)">Local drivers:</b> ${arr(S.drivers).map(d=>esc(d.factor)+' ('+esc(d.effect)+')').join('; ')}</p>`:''}
+      ${arr(S.tips).length?`<div class="tips"><span class="label">Buying tips</span><ul>${arr(S.tips).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
+    </div>
+        <p class="note-box">Big-box and yard prices are Claude's estimates from general market knowledge and can lag the market by months; yard prices are before account discounts. Real quotes are the median net prices contractors on this page shared for ${z3?esc(z3)+'xx':'your area'} in the last 120 days (shown at ${IDX_MIN}+ prices; ${IDX_TOTAL} shared so far). Share yours from Compare yards.</p>`;
+  renderDetail();
+}
+
+function renderDetail(){
+  const box=$('#snap-detail'); if(!box) return;
+  if(selItem==='custom'){
+    box.innerHTML=`<div class="dhead"><h3>Board-foot calculator</h3><span class="muted">any size, nominal inches</span></div>
+      <div class="custom-grid">
+        <label class="field"><span class="label">Thick (in)</span><input data-cu="t" inputmode="decimal" value="${esc(cust.t)}"></label>
+        <label class="field"><span class="label">Wide (in)</span><input data-cu="w" inputmode="decimal" value="${esc(cust.w)}"></label>
+        <label class="field"><span class="label">Long (ft)</span><input data-cu="l" inputmode="decimal" value="${esc(cust.l)}"></label>
+        <label class="field"><span class="label">$ per piece</span><input data-cu="p" inputmode="decimal" value="${esc(cust.p)}" placeholder="e.g. 4.10"></label>
+        <label class="field"><span class="label">$ per MBF</span><input data-cu="m" inputmode="decimal" value="${esc(cust.m)}" placeholder="or this"></label>
+      </div>
+      <div class="mathrow" id="cu-out"></div>`;
+    custOut(); return;
+  }
+  const b=BASKET.find(x=>x.k===selItem)||BASKET[0];
+  const v=snap.basket[b.k]||[0,0,0,0], yMid=(v[2]+v[3])/2, bMid=(v[0]+v[1])/2, q=IDX[b.k];
+  const yardWins = yMid && bMid && yMid<bMid, boxWins = yMid && bMid && bMid<yMid;
+  let math='';
+  if(b.bf){ math=`<span>Board ft <b>${b.bf.toFixed(2)}</b></span><span>Yard $/MBF <b>${money(yMid/b.bf*1000)}</b></span><span>$/board ft <b>${money2(yMid/b.bf)}</b></span><span>$/linear ft <b>${money2(yMid/b.len)}</b></span><span>Pieces per MBF <b>${(1000/b.bf).toFixed(0)}</b></span>`; }
+  else if(b.unit==='sheet'){ math=`<span>$/sq ft <b>${money2(yMid/32)}</b></span><span>Yard $/MSF <b>${money(yMid/32*1000)}</b></span><span>Sheets per MSF <b>31.25</b></span>`; }
+  else { math=`<span>12 ft piece <b>${money(yMid*12)}</b></span><span>16 ft piece <b>${money(yMid*16)}</b></span><span>20 ft piece <b>${money(yMid*20)}</b></span>`; }
+  box.innerHTML=`<div class="dhead"><h3>${esc(b.name)}</h3><span class="muted">price per ${unitWord(b)}</span></div>
+    ${snap.notes&&snap.notes[b.k]?`<p class="hint">${esc(snap.notes[b.k])}</p>`:''}
+    <div class="tiles">
+      <div class="tile ${boxWins?'win':''}"><span class="label">Big-box</span><strong>${range(v[0],v[1])}</strong>${boxWins?'<span class="sub">Cheaper here</span>':''}</div>
+      <div class="tile ${yardWins?'win':''}"><span class="label">Lumber yard</span><strong>${range(v[2],v[3])}</strong>${yardWins?'<span class="sub">Cheaper here</span>':'<span class="sub">Before account discount</span>'}</div>
+      <div class="tile"><span class="label">Real quotes</span>${q?`<strong>${money2(q.med)}</strong><span class="sub">median of ${q.n} shared</span>`:`<strong class="muted" style="font-size:16px">Not enough yet</strong><span class="sub">needs ${IDX_MIN}+ shared prices</span>`}</div>
+    </div>
+    <div class="mathrow"><span class="label" style="align-self:center">Lumber math</span>${math}</div>
+    <div class="qcheck"><label for="qc" class="label">Check a quote</label><input id="qc" inputmode="decimal" placeholder="$ per ${unitWord(b)}" value="${esc(checkVals[b.k]||'')}"><span id="qc-out" class="hint"></span></div>`;
+  qcOut();
+}
+function qcOut(){
+  const out=$('#qc-out'); if(!out) return;
+  const b=BASKET.find(x=>x.k===selItem); const p=num($('#qc').value);
+  if(!b||!p){ out.textContent='Type a price you were quoted to see how it compares.'; out.className='hint'; return; }
+  const v=snap.basket[b.k]||[0,0,0,0], yMid=(v[2]+v[3])/2, q=IDX[b.k];
+  const conv = b.bf ? `${money(p/b.bf*1000)}/MBF. ` : b.unit==='sheet' ? `${money(p/32*1000)}/MSF. ` : `${money(p*16)} for a 16 ft piece. `;
+  const d=yMid?(p/yMid-1)*100:0;
+  let verdict, cls;
+  if(p < v[2]) { verdict=`Good price: below the typical yard range (${Math.abs(d).toFixed(0)}% under the middle).`; cls='good'; }
+  else if(p > v[3]) { verdict=`High: above the typical yard range (${d.toFixed(0)}% over the middle). Worth pushing back or getting another quote.`; cls='bad'; }
+  else { verdict=`Within the typical yard range (${d>=0?'+':''}${d.toFixed(0)}% vs the middle).`; cls=''; }
+  if(q) verdict+=` Shared quotes median ${money2(q.med)}.`;
+  out.textContent=conv+verdict; out.className='verdict '+cls;
+}
+function custOut(){
+  const out=$('#cu-out'); if(!out) return;
+  const bf=num(cust.t)*num(cust.w)*num(cust.l)/12, p=num(cust.p), l=num(cust.l);
+  out.innerHTML=`<span>Board ft <b>${bf?bf.toFixed(2):'—'}</b></span><span>$/board ft <b>${bf&&p?money2(p/bf):'—'}</b></span><span>$/linear ft <b>${l&&p?money2(p/l):'—'}</b></span><span>Pieces per MBF <b>${bf?(1000/bf).toFixed(1):'—'}</b></span>`;
+}
+$('#snapshot').addEventListener('click',e=>{
+  const pk=e.target.closest('[data-pick]'); if(!pk) return;
+  selItem=pk.dataset.pick; store.set('selItem',selItem);
+  document.querySelectorAll('#snapshot .pick [data-pick]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.pick===selItem));
+  renderDetail();
+  if(pk.tagName==='TR') $('#snap-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+$('#snapshot').addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='qc'){ checkVals[selItem]=t.value; qcOut(); return; }
+  const f=t.dataset.cu; if(!f) return;
+  cust[f]=t.value;
+  const bf=num(cust.t)*num(cust.w)*num(cust.l)/12;
+  if(f==='m'){ cust.p = bf&&num(cust.m) ? (num(cust.m)*bf/1000).toFixed(2) : ''; const i=document.querySelector('[data-cu="p"]'); if(i) i.value=cust.p; }
+  else { cust.m = bf&&num(cust.p) ? String(Math.round(num(cust.p)/bf*1000)) : ''; const i=document.querySelector('[data-cu="m"]'); if(i) i.value=cust.m; }
+  custOut();
+});
+
+function snapPrompt(z){
+  return `You are a lumber pricing analyst helping a US residential contractor. Job area ZIP: ${z}.
+Give your best estimate of typical retail/contractor counter prices in this area for each item below, at big-box home centers (shelf price) and at independent lumber yards (counter price before account discounts). Prices per unit shown, in USD.
+Items (key: description, unit):
+${BASKET.map(b=>`${b.k}: ${b.name}, per ${b.unit==='ea'?'piece':b.unit}`).join('\n')}
+Do not name specific local businesses. Be honest about uncertainty; your knowledge may lag the current market.
+Return JSON only, no prose:
+{"region":"metro or region name","summary":"2 sentences on how lumber pricing here compares to the national average and why",
+"points":{"species":"which framing species and grades are common here and what that means for buyers","commodity":"how this area's prices follow the national lumber market (lag, which species respond to what)","layers":"the supply chain here (mills, reloads, distributors, dealer types) and who gets the best price","grade":"length, width and grade premiums that matter in this market","quotes":"typical quote hold periods and how yards here handle price changes","freight":"freight and distance-to-mill effects for this area"} (each 1-2 sentences, specific to this area),
+"basket":{"stud":[bigbox_low,bigbox_high,yard_low,yard_high], ...one entry for every key above},
+"notes":{"key":"short note, only where useful"},
+"yards":[{"type":"kind of supplier","best":"what to buy there","pricing":"how they price","q":"google maps search phrase"}] (3-5),
+"tips":["3 short buying tips for this market"],
+"asOf":"the month and year your price knowledge reflects"}`;
+}
+function normSnap(r, z){
+  r = r && typeof r==='object' ? r : {};
+  const basket={}; const rb=r.basket||{};
+  BASKET.forEach(b=>{ const v=arr(rb[b.k]).map(num); if(v.length>=4){ basket[b.k]=[Math.min(v[0],v[1]),Math.max(v[0],v[1]),Math.min(v[2],v[3]),Math.max(v[2],v[3])]; } });
+  if(Object.keys(basket).length<4) throw {code:'invalid_json'};
+  return {example:false, zip:z, region:String(r.region||'ZIP '+z), species:String(r.species||(r.points&&r.points.species)||''), summary:String(r.summary||''), basket,
+    notes:Object.fromEntries(Object.entries(r.notes||{}).map(([k,v])=>[k,String(v)])),
+    points:Object.fromEntries(Object.entries(r.points&&typeof r.points==='object'?r.points:{}).map(([k,v])=>[k,String(v)])),
+    drivers:arr(r.drivers).slice(0,6).map(d=>({factor:String(d.factor||''),effect:String(d.effect||'')})),
+    yards:arr(r.yards).slice(0,6).map(y=>({type:String(y.type||'Supplier'),best:String(y.best||''),pricing:String(y.pricing||''),q:String(y.q||y.type||'lumber yard')})),
+    tips:arr(r.tips).slice(0,5).map(String), asOf:r.asOf?'Estimate as of '+String(r.asOf):'Estimate'};
+}
+
+async function runSnapshot(z){
+  if(!cap.sample){ toast('Estimates need Claude. Open this page on claude.ai while signed in.'); return; }
+  snapCtl?.abort(); snapCtl=new AbortController();
+  const btn=$('#snap-btn'); btn.disabled=true; btn.textContent='Pricing…';
+  $('#snapshot').innerHTML=loading('Pricing lumber near '+z,'Checking typical big-box and yard prices for 12 common items.');
+  try{
+    snap=normSnap(await cap.sample.json(snapPrompt(z),{signal:snapCtl.signal}), z);
+    store.set('snap',snap);
+  }catch(err){ toast(aiError(err)); }
+  finally{ btn.disabled=false; btn.textContent='Price my area'; renderSnapshot(); renderHistory(); }
+}
+
+/* ---------- price history + forecast ---------- */
+const HIST_BASE=[[2016,1,250],[2016,2,300],[2016,3,320],[2016,4,300],[2017,1,360],[2017,2,370],[2017,3,390],[2017,4,440],
+  [2018,1,520],[2018,2,600],[2018,3,470],[2018,4,340],[2019,1,370],[2019,2,330],[2019,3,380],[2019,4,400],
+  [2020,1,420],[2020,2,380],[2020,3,750],[2020,4,650],[2021,1,950],[2021,2,1350],[2021,3,550],[2021,4,900],
+  [2022,1,1200],[2022,2,750],[2022,3,560],[2022,4,420],[2023,1,430],[2023,2,420],[2023,3,530],[2023,4,480],
+  [2024,1,560],[2024,2,500],[2024,3,480],[2024,4,560],[2025,1,620],[2025,2,600]].map(([y,q,v])=>({t:y*4+q-1,v}));
+let HIST=HIST_BASE.slice();
+let live=null;
+const qLabel=t=>`Q${t%4+1} ${Math.floor(t/4)}`;
+const NOW=(()=>{ const d=new Date(); return d.getFullYear()*4+Math.floor(d.getMonth()/3); })();
+const LONG_RUN=560, SEASON=[1.01,1.03,0.99,0.97];
+let anchor=num(store.get('anchor'))||HIST[HIST.length-1].v;
+let fc=null, fcCtl=null;
+function modelFc(a){
+  const pts=[]; for(let k=1;k<=4;k++){ const t=NOW+k; const base=a+(LONG_RUN-a)*(1-Math.pow(.75,k)); const mid=base*SEASON[t%4]/SEASON[NOW%4]; const w=.09*Math.sqrt(k);
+    pts.push({t,mid,low:mid*(1-w),high:mid*(1+w)}); }
+  return {source:'model',points:pts,outlook:'',drivers:[]};
+}
+const pct=(a,b)=>((a/b-1)*100);
+const pctTxt=v=>`${v>=0?'+':''}${v.toFixed(0)}%`;
+const tFrac=ms=>{ const d=new Date(ms); const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(); return d.getFullYear()*4+(d.getMonth()+(d.getDate()-1)/dim)/3; };
+const NOWF=tFrac(Date.now());
+const RANGES=[[1,'1 yr'],[2,'2 yr'],[5,'5 yr'],[10,'10 yr']];
+var planReady=false;
+let histRange=[1,2,5,10].includes(num(store.get('histRange5')))?num(store.get('histRange5')):5;
+const shortLabel=t=>`Q${Math.floor(t)%4+1} '${String(Math.floor(t/4)).slice(2)}`;
+const dayLabel=ms=>new Date(ms).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+function renderHistory(){
+  if(!fc) fc=modelFc(anchor);
+  $('#range').innerHTML=RANGES.map(([y,l])=>`<button type="button" role="radio" aria-checked="${y===histRange}" data-r="${y}">${l}</button>`).join('');
+  const W=820,H=290,m={l:54,r:18,t:16,b:28};
+  const t0=NOWF-4*histRange, t1=NOW+4+0.5;
+  // history: daily closes for short ranges when the live feed has them, else quarterly averages at mid-quarter
+  const useDaily=histRange<=2 && live && live.pts && live.pts.some(p=>p.t>=t0);
+  const series=useDaily
+    ? live.pts.filter(p=>p.t<=NOWF).map(p=>({t:p.t,v:p.v,label:dayLabel(p.ms),kind:'h'}))
+    : HIST.map(h=>({t:h.t+0.5,v:h.v,label:qLabel(h.t)+' avg',kind:'h'}));
+  let firstIn=series.findIndex(p=>p.t>=t0);
+  const vis = firstIn<0 ? [] : series.slice(Math.max(0,firstIn-1));   // one point before the edge so the line enters the frame
+  const inWin = vis.filter(p=>p.t>=t0);
+  const lastH = series.length ? series[series.length-1] : null;
+  const fpts=[{t:NOWF,mid:anchor,low:anchor,high:anchor},...fc.points.map(p=>({...p,t:p.t+0.5}))];
+  const vals=[...inWin.map(p=>p.v),...fpts.map(p=>p.low),...fpts.map(p=>p.high)];
+  const lo=Math.min(...vals), hi=Math.max(...vals), spread=hi-lo;
+  const step = spread>900?250 : spread>400?100 : 50;
+  const yMin=Math.max(0,Math.floor(lo*0.94/step)*step), yMax=Math.ceil(hi*1.05/step)*step;
+  const X=t=>m.l+(t-t0)/(t1-t0)*(W-m.l-m.r), Yv=v=>m.t+(1-(v-yMin)/(yMax-yMin))*(H-m.t-m.b);
+  let g='';
+  for(let v=yMin;v<=yMax;v+=step) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Yv(v)}" y2="${Yv(v)}"/><text class="ax" x="${m.l-8}" y="${Yv(v)+4}" text-anchor="end">$${v.toLocaleString()}</text>`;
+  if(histRange<=2){ for(let t=Math.ceil(t0);t<=t1;t++){ if(histRange===2&&t%2) continue; g+=`<line class="gl" x1="${X(t)}" x2="${X(t)}" y1="${H-m.b}" y2="${H-m.b+4}"/><text class="ax" x="${X(t)}" y="${H-8}" text-anchor="middle">${shortLabel(t)}</text>`; } }
+  else { const every=histRange>5?2:1; for(let y=Math.ceil(t0/4);y*4<=t1;y++){ if(y%every) continue; g+=`<line class="gl" x1="${X(y*4)}" x2="${X(y*4)}" y1="${H-m.b}" y2="${H-m.b+4}"/><text class="ax" x="${X(y*4)}" y="${H-8}" text-anchor="middle">${y}</text>`; } }
+  const P=p=>`${X(p.t).toFixed(1)},${Yv(p.v).toFixed(1)}`;
+  const band=fpts.map(p=>`${X(p.t).toFixed(1)},${Yv(p.high).toFixed(1)}`).join(' ')+' '+fpts.slice().reverse().map(p=>`${X(p.t).toFixed(1)},${Yv(p.low).toFixed(1)}`).join(' ');
+  const fline=fpts.map(p=>`${X(p.t).toFixed(1)},${Yv(p.mid).toFixed(1)}`).join(' ');
+  const end=fc.points[fc.points.length-1];
+  const peak=X(2021*4+1.5)>m.l+10 && 1350<=yMax ? `<text class="lbl" x="${X(2021*4+1.5)+8}" y="${Yv(1350)+4}">2021 peak</text>` : '';
+  const gapNeeded = lastH && NOWF-lastH.t > (useDaily?0.15:1);
+  const empty = !inWin.length;
+  $('#chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Framing lumber price, last ${histRange} year${histRange>1?'s':''} and a four-quarter forecast. Today ${money(anchor)} per MBF, forecast ${money(end.mid)} in four quarters.">
+    <defs><clipPath id="plot"><rect x="${m.l}" y="0" width="${W-m.l-m.r}" height="${H}"/></clipPath></defs>
+    ${g}
+    <g clip-path="url(#plot)">
+      <polygon class="band" points="${band}"/>
+      ${vis.length>1?`<polyline class="hl" points="${vis.map(P).join(' ')}"/>`:''}
+      ${gapNeeded?`<line class="gap" x1="${X(lastH.t)}" y1="${Yv(lastH.v)}" x2="${X(NOWF)}" y2="${Yv(anchor)}"/>`:''}
+      <polyline class="fl" points="${fline}"/>
+      ${peak}
+    </g>
+    <circle class="now" cx="${X(NOWF)}" cy="${Yv(anchor)}" r="5.5"/>
+    <text class="lbl" x="${X(NOWF)}" y="${Yv(anchor)-12}" text-anchor="middle">Today</text>
+    ${empty?`<text class="ax" x="${(m.l+X(NOWF))/2}" y="${(m.t+H-m.b)/2}" text-anchor="middle">No price history for this window yet. Connect the live feed or pick a longer range.</text>`:''}
+    <g id="hover" style="display:none"><line class="cross" id="hv-line" y1="${m.t}" y2="${H-m.b}"/><circle class="dot" id="hv-dot" r="4.5"/></g>
+    <rect id="hit" x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent"/>
+  </svg><div class="tip" id="tip" hidden></div>`;
+  const pts=[...inWin,{t:NOWF,v:anchor,kind:'n'},...fpts.slice(1).map(p=>({t:p.t,v:p.mid,low:p.low,high:p.high,label:qLabel(Math.floor(p.t)),kind:'f'}))];
+  const svg=$('#chart svg'), hit=$('#hit');
+  const move=e=>{ const r=svg.getBoundingClientRect(); const sx=(e.clientX-r.left)/r.width*W;
+    const t=t0+(sx-m.l)/(W-m.l-m.r)*(t1-t0); let best=pts[0]; pts.forEach(p=>{ if(Math.abs(p.t-t)<Math.abs(best.t-t)) best=p; });
+    const x=X(best.t), y=Yv(best.v); $('#hover').style.display='';
+    $('#hv-line').setAttribute('x1',x); $('#hv-line').setAttribute('x2',x);
+    const dot=$('#hv-dot'); dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.style.stroke=best.kind==='h'?'var(--pine)':'var(--accent)';
+    const tip=$('#tip'); tip.hidden=false; tip.style.left=(x/W*r.width)+'px'; tip.style.top=(y/H*r.height)+'px';
+    tip.innerHTML=best.kind==='f'?`${best.label} forecast<br><b>${money(best.v)}</b> <span class="muted">(${money(best.low)}–${money(best.high)})</span>`:`${best.kind==='n'?'Today':best.label}<br><b>${money(best.v)}</b> / MBF`; };
+  hit.addEventListener('pointermove',move); hit.addEventListener('pointerdown',move);
+  hit.addEventListener('pointerleave',()=>{ $('#hover').style.display='none'; $('#tip').hidden=true; });
+  if(planReady) renderFuture();
+
+  const n1=fc.points[0], n4=end, c1=pct(n1.mid,anchor), c4=pct(n4.mid,anchor);
+  const call = c1>5 ? ['Lock prices now','Prices look likely to rise next quarter. Get written quote holds and buy the framing package early.']
+    : c1<-5 ? ['Buy as needed','Prices look likely to ease. Keep quote holds short and avoid stocking up.']
+    : ['Steady','Little change expected next quarter. Buy on your normal schedule and keep comparing yards.'];
+  const S=snap.basket||{}; const mid=k=>S[k]?(S[k][2]+S[k][3])/2:0;
+  const areaTxt = mid('stud') ? `${esc(snap.example?'Example area':snap.region)} yard stud ${money2(mid('stud'))} → <b>${money2(mid('stud')*(1+c4/100))}</b>, 2×6 × 16 ft ${money2(mid('2x6x16'))} → <b>${money2(mid('2x6x16')*(1+c4/100))}</b>` : '';
+  $('#fc-stats').innerHTML=`
+    <div class="sum"><span class="label">Today</span><strong>${money(anchor)}</strong><span class="sub">per MBF, ${qLabel(NOW)}</span></div>
+    <div class="sum"><span class="label">Next quarter</span><strong>${money(n1.mid)} <span class="${c1>=0?'up':'down'}" style="font-size:15px">${pctTxt(c1)}</span></strong><span class="sub">${money(n1.low)}–${money(n1.high)} likely</span></div>
+    <div class="sum"><span class="label">In 12 months</span><strong>${money(n4.mid)} <span class="${c4>=0?'up':'down'}" style="font-size:15px">${pctTxt(c4)}</span></strong><span class="sub">${money(n4.low)}–${money(n4.high)} likely</span></div>
+    <div class="sum ${c1<-5?'win':''}"><span class="label">What to do</span><strong style="font-size:19px">${call[0]}</strong><span class="sub">${call[1]}</span></div>`;
+  $('#fc-notes').innerHTML=(areaTxt?`<p class="hint">If your area follows the national trend for 12 months: ${areaTxt}.</p>`:'')+
+    (fc.source==='claude'&&(fc.outlook||fc.drivers.length)?`<div class="mini" style="margin-top:8px"><div><h3>Claude's outlook</h3><p style="font-size:13.5px">${esc(fc.outlook)}</p></div><div><h3>Watch for</h3><ul>${fc.drivers.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div></div>`:'');
+  $('#fc-badge').textContent = fc.source==='claude' ? 'Claude outlook'+(fc.confidence?` · ${fc.confidence} confidence`:'') : 'Trend model';
+  $('#hist-table').innerHTML=`<thead><tr><th>Quarter</th><th class="num">$/MBF</th><th class="num">Likely range</th></tr></thead><tbody>${
+    HIST.map(h=>`<tr><td>${qLabel(h.t)}</td><td class="num">${money(h.v)}</td><td class="num muted">history</td></tr>`).join('')}
+    <tr><td><b>${qLabel(NOW)} (today)</b></td><td class="num"><b>${money(anchor)}</b></td><td class="num muted">your input</td></tr>${
+    fc.points.map(p=>`<tr><td>${qLabel(p.t)} forecast</td><td class="num">${money(p.mid)}</td><td class="num">${money(p.low)}–${money(p.high)}</td></tr>`).join('')}</tbody>`;
+}
+$('#anchor').value=Math.round(anchor);
+$('#anchor').addEventListener('input',e=>{ const v=num(e.target.value); if(v<100||v>3000) return; anchor=v; store.set('anchor',v); store.set('anchorManual',true); fc=modelFc(anchor); renderHistory(); renderLiveLine(); });
+function renderLiveLine(){
+  const el=$('#live-line'); if(!live){ return; }
+  const manual=store.get('anchorManual') && Math.round(anchor)!==Math.round(live.price);
+  el.innerHTML=`<b style="color:var(--ink)">Live feed:</b> ${money(live.price)}/MBF on ${esc(fmtDate(live.asOf))}${live.source?' from '+esc(live.source):''}.${manual?' <button class="linkbtn" id="use-live" style="color:var(--link)">Use live price</button>':''}`;
+}
+$('#hist').addEventListener('click',e=>{ const rb=e.target.closest('#range [data-r]'); if(rb){ histRange=num(rb.dataset.r); store.set('histRange5',histRange); renderHistory(); return; }
+  if(e.target.closest('#use-live')&&live){ anchor=live.price; store.set('anchorManual',false); $('#anchor').value=Math.round(anchor); fc=modelFc(anchor); renderHistory(); renderLiveLine(); } });
+function applyLive(data){
+  const price=num(data&&data.price); if(!(price>50)) { live=null; return; }
+  live={price, asOf:num(data.asOf)||Date.now(), source:String(data.source||''),
+    pts:arr(data.daily).map(r=>({ms:num(r[0]),v:num(r[1])})).filter(p=>p.ms>0&&p.v>50).sort((a,b)=>a.ms-b.ms).map(p=>({...p,t:tFrac(p.ms)}))};
+  // quarterly averages from daily closes override or extend the built-in history
+  const q={}; arr(data.daily).forEach(r=>{ const d=new Date(num(r[0])), v=num(r[1]); if(!(v>50)||isNaN(d)) return; const t=d.getFullYear()*4+Math.floor(d.getMonth()/3); (q[t] ||= []).push(v); });
+  const liveQ=Object.entries(q).map(([t,vs])=>({t:+t,v:Math.round(vs.reduce((a,b)=>a+b,0)/vs.length)})).filter(h=>h.t<NOW);
+  const have=new Set(liveQ.map(h=>h.t));
+  HIST=[...HIST_BASE.filter(h=>!have.has(h.t)),...liveQ].sort((a,b)=>a.t-b.t);
+  if(!store.get('anchorManual')){ anchor=price; $('#anchor').value=Math.round(price); }
+  fc=modelFc(anchor); renderHistory(); renderLiveLine();
+}
+$('#ai-fc').onclick=async()=>{
+  if(!cap.sample){ toast('The outlook needs Claude. Open this page on claude.ai while signed in.'); return; }
+  fcCtl?.abort(); fcCtl=new AbortController();
+  const btn=$('#ai-fc'); btn.disabled=true; btn.textContent='Thinking…';
+  const q=[1,2,3,4].map(k=>qLabel(NOW+k));
+  try{
+    const r=await cap.sample.json(`You are a lumber market analyst advising a US home builder${zip?' working near ZIP '+zip:''}.
+Approximate quarterly framing lumber prices ($/MBF, near-month futures): ${HIST.map(h=>qLabel(h.t)+' '+h.v).join(', ')}.
+The builder says the price today (${qLabel(NOW)}) is $${Math.round(anchor)}/MBF.
+Forecast the national framing lumber price for the next four quarters (${q.join(', ')}), with a realistic likely range for each. Consider seasonality, housing starts, mill capacity and curtailments, duties on Canadian softwood, interest rates, and anything else you know. Be honest that your knowledge may lag current events.
+Return JSON only: {"points":[{"mid":number,"low":number,"high":number}] (exactly 4, in order),"outlook":"2-3 sentences","drivers":["3-4 things to watch"],"confidence":"low|medium|high"}`,{signal:fcCtl.signal});
+    const pts=arr(r&&r.points).slice(0,4).map((p,i)=>{ const mid=num(p.mid); const lo=num(p.low)||mid*.9, hi=num(p.high)||mid*1.1; return {t:NOW+i+1,mid,low:Math.min(lo,mid),high:Math.max(hi,mid)}; });
+    if(pts.length<4||pts.some(p=>!(p.mid>50))) throw {code:'invalid_json'};
+    fc={source:'claude',points:pts,outlook:String(r.outlook||''),drivers:arr(r.drivers).slice(0,5).map(String),confidence:String(r.confidence||'').toLowerCase().replace(/[^a-z]/g,'')};
+    renderHistory();
+  }catch(err){ toast(aiError(err)); }
+  finally{ btn.disabled=false; btn.textContent='Ask Claude for an outlook'; }
+};
+
+/* ---------- shared area quote index ---------- */
+const IDX_MIN=3, IDX_DAYS=120;
+let IDX={}, IDX_TOTAL=0, allShared=[];
+function catOf(desc, unit){
+  const d=' '+String(desc).toLowerCase().replace(/[×]/g,'x').replace(/\s+/g,' ')+' ';
+  const u=String(unit||'').toLowerCase();
+  const has=r=>r.test(d);
+  const dim=(a,b)=>new RegExp('(^|[^0-9])'+a+'\\s*x\\s*'+b+'(?![0-9])').test(d);
+  const len=n=>new RegExp('x\\s*'+n+'(?![0-9/])|(^|[^0-9/])'+n+"\\s*(ft|'|foot|feet)").test(d);
+  const bulk=/mbf|\bbf|bundle|lift|unit/.test(u);
+  if(has(/lvl/)&&has(/11[- ]?7\/8|11\.875|11 ?⅞/)) return /lf|ft|foot/.test(u)?'lvl':null;
+  if(bulk||/\blf\b/.test(u)) return null;
+  if(has(/osb/)&&has(/7\/16/)) return 'osb';
+  if(has(/cdx|plywood|\bply\b/)&&has(/1\/2|15\/32/)) return 'cdx';
+  if(has(/23\/32|3\/4/)&&has(/t ?& ?g|tongue|subfloor/)) return 'subfloor';
+  const pt=has(/\bpt\b|treated|\bptd\b|ground contact/);
+  if(pt) return dim(4,4)&&len(8)?'pt4x4':dim(2,6)&&len(12)?'pt2x6':null;
+  if(dim(2,4)&&(has(/92|stud|precut/)||len(8))) return 'stud';
+  if(dim(2,4)&&len(16)) return '2x4x16';
+  if(dim(2,6)&&len(8)) return '2x6x8';
+  if(dim(2,6)&&len(16)) return '2x6x16';
+  if(dim(2,10)&&len(16)) return '2x10x16';
+  if(dim(2,12)&&len(16)) return '2x12x16';
+  return null;
+}
+function computeIndex(){
+  const z3=(snap.example?zip:(snap.zip||zip)).slice(0,3), cutoff=Date.now()-IDX_DAYS*864e5;
+  const by={}; IDX_TOTAL=0;
+  allShared.forEach(e=>{ if(!z3||e.z3!==z3||num(e.d)<cutoff) return; const p=num(e.p); if(!(p>0)) return; IDX_TOTAL++; (by[e.k] ||= []).push(p); });
+  IDX={}; Object.entries(by).forEach(([k,ps])=>{ if(ps.length<IDX_MIN) return; ps.sort((a,b)=>a-b); const m=ps.length>>1; IDX[k]={med:ps.length%2?ps[m]:(ps[m-1]+ps[m])/2,n:ps.length}; });
+}
+function shareRows(){
+  const rows=[];
+  job.items.forEach(it=>{ const k=catOf(it.desc,it.unit); if(!k) return;
+    job.yards.forEach(y=>{ const p=priceOf(it,y); if(p>0 && !isEst(it,y)) rows.push({k,p:Math.round(netOf(it,y)*100)/100,yard:y.name,desc:it.desc}); }); });
+  return rows;
+}
+$('#share-btn').onclick=()=>{
+  const panel=$('#share-panel');
+  if(!panel.hidden){ panel.hidden=true; return; }
+  if(job.example){ toast('Enter your own quotes first. Example prices can\'t be shared.'); return; }
+  if(!cap.db||!cap.uid){ toast('Sharing needs you signed in on claude.ai.'); return; }
+  const z=(job.zip||zip).trim(); if(!/^\d{5}/.test(z)){ $('#job-zip').focus(); toast('Add the job ZIP first.'); return; }
+  const rows=shareRows();
+  const names=Object.fromEntries(BASKET.map(b=>[b.k,b.name]));
+  panel.innerHTML = rows.length ? `<b>Share ${rows.length} price${rows.length>1?'s':''} to the ${esc(z.slice(0,3))}xx area index?</b>
+    <ul>${rows.slice(0,24).map(r=>`<li>${esc(names[r.k])}: <span class="mono">${money2(r.p)}</span> <span class="muted">net</span></li>`).join('')}${rows.length>24?`<li class="muted">and ${rows.length-24} more</li>`:''}</ul>
+    <p class="hint">Only the item type, the net price after discount, the first three digits of the ZIP and the date are shared. Yard names, job names and other items stay private. Sharing again from this job replaces what it shared before.</p>
+    <div class="actions"><button class="btn sm tape" id="share-go">Share</button><button class="btn sm ghost" id="share-cancel">Cancel</button></div>`
+    : `<b>Nothing here matches the index yet.</b><p class="hint">The index tracks the 12 market pricing items (studs, 2×4 to 2×12 at 16 ft, treated 4×4 and 2×6, OSB, CDX, subfloor, LVL per LF). Write items with size and length, like "2x6x16 #2" or "7/16 OSB".</p><div class="actions"><button class="btn sm ghost" id="share-cancel">Close</button></div>`;
+  panel.hidden=false;
+};
+$('#share-panel').addEventListener('click',async e=>{
+  if(e.target.closest('#share-cancel')){ $('#share-panel').hidden=true; return; }
+  if(!e.target.closest('#share-go')) return;
+  const btn=$('#share-go'); btn.disabled=true; btn.textContent='Sharing…';
+  job.shareKey ||= newId(); touch();
+  const z3=(job.zip||zip).trim().slice(0,3), now=Date.now(), key=job.shareKey;
+  const fresh=shareRows().map(r=>({k:r.k,p:r.p,z3,d:now,j:key}));
+  const ref=cap.db.doc('quotes/'+cap.uid);
+  try{
+    const snapDoc=await ref.get();
+    const old=snapDoc.exists?arr(snapDoc.data().entries):[];
+    const keep=old.filter(x=>x.j!==key && num(x.d)>now-365*864e5);
+    await ref.set({entries:[...fresh,...keep].slice(0,500)});
+    $('#share-panel').hidden=true; toast(`Shared ${fresh.length} prices. Thanks, this builds the area index.`);
+  }catch(err){ btn.disabled=false; btn.textContent='Share'; toast('Sharing didn\'t go through. Try again.'); }
+});
+
+/* ---------- discounts ---------- */
+function renderDisc(){
+  const D=disc, el=$('#disc');
+  el.innerHTML=`
+    <div class="head-row">
+      <div style="display:flex;flex-direction:column;gap:6px"><span class="form-tag">Contractor discounts</span><h2>${esc(D.region||'Your area')}${D.zip?` <span class="muted mono" style="font-size:15px">${esc(D.zip)}</span>`:''}</h2></div>
+      <div class="actions">${D.example?'<span class="badge">Example</span>':`<span class="badge dim">${esc(D.asOf||'Estimate')}</span>`}<button class="btn sm" id="disc-btn">${D.example||D.zip!==zip?'Get guide for '+esc(zip||'your ZIP'):'Refresh'}</button></div>
+    </div>
+    <p class="hint">Typical discounts off counter price with a contractor account. What you actually get depends on your volume, credit and relationship with the yard.</p>
+    <div class="card-grid">${arr(D.programs).map(p=>`<div class="ytype">
+      <strong>${esc(p.type)}</strong>
+      <span class="pct">${p.low===p.high?p.low:p.low+'–'+p.high}%</span>
+      <div class="kv"><span>Qualify</span><span>${esc(p.qualifies)}</span><span>Terms</span><span>${esc(p.terms)}</span><span>Delivery</span><span>${esc(p.delivery)}</span></div>
+      ${p.tip?`<span class="muted" style="font-size:13px">${esc(p.tip)}</span>`:''}
+      <a href="${mapsLink(p.q||p.type, D.example?'':D.zip)}" target="_blank" rel="noopener">Find near ${esc(D.example?'you':D.zip)} ↗</a></div>`).join('')}</div>
+    <div class="two">
+      <div style="display:flex;flex-direction:column;gap:8px"><h3>What gets you a better price</h3><ul class="list">${arr(D.levers).map(l=>`<li class="drv"><b>${esc(l.lever)}</b>${esc(l.detail)}</li>`).join('')}</ul></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><h3>Costs that eat the discount</h3><ul class="list">${arr(D.watch).map(w=>`<li class="drv" style="border-color:var(--warn)">${esc(w)}</li>`).join('')}</ul></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="tools-row"><h3>Opening an account: what to ask</h3><button class="btn sm ghost" id="copy-script">Copy</button></div>
+      <blockquote id="script">${esc(D.script)}</blockquote>
+    </div>
+    <p class="note-box">Discount ranges are Claude's rule-of-thumb estimates for this kind of market, not quotes or published programs. Programs change, so confirm terms with each yard.</p>`;
+}
+function discPrompt(z){
+  return `You are advising a US residential contractor on lumber purchasing. Job area ZIP: ${z}.
+Describe typical contractor discounts and account terms available in this area by kind of supplier (independent lumber yard, big-box pro program, regional building supply chain, wholesale or reload, and any other kind common here). Use realistic rule-of-thumb ranges for this market. Do not name specific local businesses or brand-name programs.
+Return JSON only:
+{"region":"metro or region name",
+"programs":[{"type":"kind of supplier","low":percent,"high":percent,"qualifies":"what it takes","terms":"payment terms","delivery":"delivery policy","tip":"one tip","q":"google maps search phrase"}] (3-5),
+"levers":[{"lever":"","detail":""}] (4-5 things that get a better price here),
+"watch":["4-5 fees or terms that eat into discounts"],
+"script":"a short, natural script for opening a contractor account and asking about pricing",
+"asOf":"month and year your knowledge reflects"}`;
+}
+async function runDisc(){
+  const z=zip;
+  if(!z){ selectTab('market'); $('#zip').focus(); toast('Enter your ZIP first.'); return; }
+  if(!cap.sample){ toast('Estimates need Claude. Open this page on claude.ai while signed in.'); return; }
+  discCtl?.abort(); discCtl=new AbortController();
+  $('#disc').innerHTML=loading('Checking contractor pricing near '+z,'Looking at account discounts, terms and delivery by kind of yard.');
+  try{
+    const r=await cap.sample.json(discPrompt(z),{signal:discCtl.signal});
+    const programs=arr(r&&r.programs).slice(0,6).map(p=>({type:String(p.type||'Supplier'),low:Math.round(num(p.low)),high:Math.round(num(p.high)||num(p.low)),qualifies:String(p.qualifies||''),terms:String(p.terms||''),delivery:String(p.delivery||''),tip:String(p.tip||''),q:String(p.q||p.type||'lumber yard')}));
+    if(!programs.length) throw {code:'invalid_json'};
+    disc={example:false,zip:z,region:String(r.region||'ZIP '+z),programs,
+      levers:arr(r.levers).slice(0,6).map(l=>({lever:String(l.lever||''),detail:String(l.detail||'')})),
+      watch:arr(r.watch).slice(0,6).map(String),script:String(r.script||''),asOf:r.asOf?'Estimate as of '+String(r.asOf):'Estimate'};
+    store.set('disc',disc);
+  }catch(err){ toast(aiError(err)); }
+  renderDisc();
+}
+$('#disc').addEventListener('click',e=>{
+  if(e.target.closest('#disc-btn')) runDisc();
+  if(e.target.closest('#copy-script')) copyText(disc.script,'Script copied');
+});
+
+/* offer calculator */
+function offerCalc(){
+  const g=k=>num(document.querySelector(`[data-o="${k}"]`).value);
+  const calc=o=>{ const q=g(o+'.q'), d=q*g(o+'.d')/100, e=(q-d)*g(o+'.e')/100, net=q-d-e, tax=net*g(o+'.t')/100, f=g(o+'.f'); return {d:d+e, tax, f, total:net+tax+f}; };
+  const A=calc('a'), B=calc('b');
+  const cls=(x,y)=>x<y-0.5?'better':'';
+  $('#offer-out').innerHTML=`<tr class="res"><td>Discounts</td><td class="num">−${money(A.d)}</td><td class="num">−${money(B.d)}</td></tr>
+    <tr><td>Tax + delivery</td><td class="num">${money(A.tax+A.f)}</td><td class="num">${money(B.tax+B.f)}</td></tr>
+    <tr class="res"><td>You pay</td><td class="num ${cls(A.total,B.total)}">${money(A.total)}</td><td class="num ${cls(B.total,A.total)}">${money(B.total)}</td></tr>`;
+  const diff=Math.abs(A.total-B.total);
+  $('#offer-verdict').textContent = diff<1 ? 'The two offers come out the same.' : `Offer ${A.total<B.total?'A':'B'} is cheaper by ${money(diff)} (${(diff/Math.max(A.total,B.total)*100).toFixed(1)}%).`;
+}
+$('#offer').addEventListener('input',offerCalc);
+
+/* ---------- compare yards ---------- */
+const priceOf=(it,y)=>num((job.prices[it.id]||{})[y.id]);
+const netOf=(it,y)=>priceOf(it,y)*(1-num(y.disc)/100);
+
+function yardTotals(){
+  return job.yards.map(y=>{ let sub=0, missing=0;
+    job.items.forEach(it=>{ const p=priceOf(it,y); if(p>0) sub+=p*num(it.qty); else if(num(it.qty)>0) missing++; });
+    const d=sub*num(y.disc)/100, tax=(sub-d)*num(y.tax)/100, total=sub-d+tax+num(y.delivery);
+    return {y, sub, d, tax, total, missing}; });
+}
+function splitOrder(){
+  const groups={}; let unpriced=0;
+  job.items.forEach(it=>{ if(!(num(it.qty)>0)) return; let best=null;
+    job.yards.forEach(y=>{ const p=priceOf(it,y); if(p>0){ const n=netOf(it,y); if(!best||n<best.n) best={y,n}; } });
+    if(!best){ unpriced++; return; }
+    (groups[best.y.id] ||= {y:best.y, net:0, count:0}); groups[best.y.id].net+=best.n*num(it.qty); groups[best.y.id].count++; });
+  let total=0; const parts=Object.values(groups).map(g=>{ const t=g.net*(1+num(g.y.tax)/100)+num(g.y.delivery); total+=t; return {...g,total:t}; });
+  return {total, parts, unpriced};
+}
+
+function renderMatrix(){
+  const Y=job.yards, I=job.items, hasEst=Object.keys(job.est||{}).length>0;
+  const yh=Y.map(y=>`<th class="yh"><div class="yh-top"><input data-yf="name" data-y="${y.id}" value="${esc(y.name)}" aria-label="Yard name" maxlength="40">${Y.length>1?`<button class="x" data-rmyard="${y.id}" aria-label="Remove ${esc(y.name)}">×</button>`:''}</div><span class="yh-sub">${isPlaceholder(y)?'':`<button class="star ${savedMatch(y)?'on':''}" data-saveyard="${y.id}" title="${savedMatch(y)?'In My yards':'Save to My yards'}">${savedMatch(y)?'★':'☆'}</button> `}${y.kind?esc(y.kind)+' · ':''}${y.maps?`<a href="${esc(y.maps)}" target="_blank" rel="noopener" title="${esc(y.area||'')}">Map ↗</a>`:'$ / unit'}</span></th>`).join('');
+  const body=I.map(it=>{ const e=(job.est||{})[it.id];
+    return `<tr data-item="${it.id}">
+      <td class="desc"><input data-f="desc" value="${esc(it.desc)}" placeholder="Item and spec" aria-label="Item"></td>
+      <td style="width:76px"><input class="n" data-f="qty" inputmode="decimal" value="${esc(it.qty)}" aria-label="Quantity"></td>
+      <td style="width:72px"><input data-f="unit" value="${esc(it.unit)}" aria-label="Unit"></td>
+      ${hasEst?`<td class="num est" title="${esc(e&&e.note||'')}">${e?range(e.low,e.high):'—'}</td>`:''}
+      ${Y.map(y=>{ const v=(job.prices[it.id]||{})[y.id]; return `<td class="pc ${isEst(it,y)?'estv':''}" data-y="${y.id}"><input class="n" data-price inputmode="decimal" value="${v?esc(v):''}" placeholder="–" aria-label="${esc(y.name)} price"><span class="ln"></span></td>`; }).join('')}
+      <td style="width:30px"><button class="x" data-rmitem="${it.id}" aria-label="Remove item">×</button></td></tr>`; }).join('');
+  const lead=hasEst?4:3;
+  const frow=(label,f,suffix)=>`<tr><td class="flab" colspan="${lead}">${label}</td>${Y.map(y=>`<td><input class="n" data-yf="${f}" data-y="${y.id}" inputmode="decimal" value="${esc(y[f]||'')}" placeholder="0" aria-label="${esc(y.name)} ${label}"></td>`).join('')}<td class="muted" style="font-size:12px;padding-top:9px">${suffix}</td></tr>`;
+  const crow=(label,key,cls)=>`<tr class="${cls||''}"><td class="flab" colspan="${lead}">${label}</td>${Y.map(y=>`<td class="num" data-c="${key}" data-y="${y.id}"></td>`).join('')}<td></td></tr>`;
+  $('#mx').innerHTML=`<thead><tr><th>Item</th><th class="num">Qty</th><th>Unit</th>${hasEst?'<th class="num">Area est.</th>':''}${yh}<th></th></tr></thead>
+    <tbody>${body}</tbody>
+    <tfoot>${crow('Subtotal','sub')}${frow('Account discount','disc','%')}${frow('Delivery','delivery','$')}${frow('Sales tax','tax','%')}${crow('Total','total','tot')}${crow('Missing prices','missing')}</tfoot>`;
+  recalc();
+}
+
+function recalc(){
+  // per-line
+  job.items.forEach(it=>{
+    const row=document.querySelector(`#mx tr[data-item="${it.id}"]`); if(!row) return;
+    let min=Infinity; job.yards.forEach(y=>{ if(priceOf(it,y)>0) min=Math.min(min,netOf(it,y)); });
+    const e=(job.est||{})[it.id];
+    const priced=job.yards.filter(y=>priceOf(it,y)>0).length;
+    job.yards.forEach(y=>{ const td=row.querySelector(`td.pc[data-y="${y.id}"]`); if(!td) return;
+      const p=priceOf(it,y), n=netOf(it,y);
+      td.classList.toggle('best', p>0 && priced>1 && Math.abs(n-min)<0.0001);
+      const over = p>0 && e && e.high>0 && n>e.high*1.1;
+      td.classList.toggle('over', !!over); td.title = over ? `About ${Math.round((n/e.high-1)*100)}% over the area estimate after discount` : '';
+      td.querySelector('.ln').textContent = p>0 && num(it.qty)>0 ? money(n*num(it.qty)) + (isEst(it,y)?' est.':' net') : ''; });
+  });
+  // footer
+  const T=yardTotals(); const complete=T.filter(t=>t.missing===0 && t.sub>0);
+  const bestT = complete.length ? Math.min(...complete.map(t=>t.total)) : null;
+  T.forEach(t=>{
+    const set=(k,v)=>{ const c=document.querySelector(`#mx td[data-c="${k}"][data-y="${t.y.id}"]`); if(c) c.textContent=v; return c; };
+    set('sub', t.sub?money(t.sub):'—');
+    const tc=set('total', t.sub?money(t.total):'—'); if(tc) tc.classList.toggle('win', bestT!==null && t.missing===0 && Math.abs(t.total-bestT)<0.5);
+    set('missing', t.missing?String(t.missing):'0');
+  });
+  renderSummary(T, complete, bestT);
+  $('#rfq').value=rfqText();
+}
+
+function renderSummary(T, complete, bestT){
+  const S=splitOrder();
+  const best = bestT!==null ? complete.find(t=>Math.abs(t.total-bestT)<0.5) : null;
+  const worst = complete.length>1 ? Math.max(...complete.map(t=>t.total)) : null;
+  const splitSaves = best && S.parts.length>1 && S.unpriced===0 ? best.total - S.total : 0;
+  $('#summary').innerHTML=`
+    <div class="sum ${best?'win':''}"><span class="label">Best single yard</span>
+      ${best?`<strong>${money(best.total)}</strong><span class="sub">${esc(best.y.name)}, all ${job.items.length} lines priced${T.find(t=>t.y.id===best.y.id)&&job.items.some(it=>isEst(it,best.y))?', includes estimates':''}</span>`:`<strong>—</strong><span class="sub">Price every line at a yard to compare totals.</span>`}</div>
+    <div class="sum"><span class="label">Split the order</span>
+      ${S.parts.length?`<strong>${money(S.total)}</strong><span class="sub">${S.parts.map(p=>`${p.count} from ${esc(p.y.name)}`).join(', ')}${S.unpriced?`. ${S.unpriced} unpriced`:''}${splitSaves>1?`. Saves ${money(splitSaves)} if worth the extra deliveries`:S.parts.length===1?'. One yard wins every line':''}</span>`:`<strong>—</strong><span class="sub">Lowest net price on each line, with each yard's delivery and tax.</span>`}</div>
+    <div class="sum"><span class="label">Spread between yards</span>
+      ${worst!==null?`<strong>${money(worst-bestT)}</strong><span class="sub">${((worst-bestT)/worst*100).toFixed(1)}% between the highest and lowest complete quote</span>`:`<strong>—</strong><span class="sub">Needs two yards with every line priced.</span>`}</div>`;
+  let estN=0, allN=0; job.items.forEach(it=>job.yards.forEach(y=>{ if(priceOf(it,y)>0){ allN++; if(isEst(it,y)) estN++; } }));
+  const en=$('#est-note'); en.hidden=!estN;
+  en.textContent = estN ? `${estN} of ${allN} prices are Claude's estimates for each store, not the store's real prices. Call or send the quote request to each store and type their prices in to replace them.` : '';
+  const max=Math.max(1,...T.map(t=>t.total));
+  $('#bars').innerHTML=T.filter(t=>t.sub>0).map(t=>`<div class="barrow ${best&&t.y.id===best.y.id?'best':''}"><span class="nm">${esc(t.y.name)}${t.missing?` <span class="muted">(${t.missing} missing)</span>`:''}</span><div class="track"><span style="width:${(t.total/max*100).toFixed(1)}%"></span></div><span class="mono">${money(t.total)}</span></div>`).join('');
+}
+
+function renderJobHead(){
+  $('#job-name').value=job.name||''; $('#job-zip').value=job.zip||'';
+  $('#job-title').textContent=job.name||'Compare local stores';
+  $('#job-badge').textContent = job.example ? 'Example prices' : job.id ? 'Saved, updates as you type' : 'Not saved';
+  $('#save-job').hidden = !!job.id;
+}
+function renderJob(){ renderJobHead(); renderMatrix(); }
+
+function rfqText(){
+  const lines=job.items.filter(it=>it.desc&&num(it.qty)>0).map(it=>`- ${it.qty} ${it.unit}  ${it.desc}`);
+  return `Hello,
+
+I'd like a quote on the following materials${job.name&&!job.example?` for ${job.name}`:''}${job.zip?`, delivered to ZIP ${job.zip}`:''}:
+
+${lines.join('\n')||'- (add items)'}
+
+Please include:
+- Unit price for each line, and any substitutions you'd suggest
+- My contractor or account discount, if not already applied
+- Delivery fee and lead time
+- How long you'll hold these prices
+- Your return and restocking policy
+
+Thanks,`;
+}
+
+/* matrix events */
+$('#mx').addEventListener('input',e=>{
+  const t=e.target; const row=t.closest('tr[data-item]');
+  if(t.dataset.f && row){ const it=job.items.find(x=>x.id===row.dataset.item); if(!it) return;
+    it[t.dataset.f] = t.dataset.f==='qty' ? t.value : t.value; }
+  else if(t.hasAttribute('data-price') && row){ const td=t.closest('td'), y=td.dataset.y; (job.prices[row.dataset.item] ||= {})[y]=t.value; if(job.estp&&job.estp[row.dataset.item]) delete job.estp[row.dataset.item][y]; td.classList.remove('estv'); }
+  else if(t.dataset.yf){ const y=job.yards.find(x=>x.id===t.dataset.y); if(!y) return; y[t.dataset.yf]=t.value;
+    if(t.dataset.yf==='name') document.querySelectorAll(`td.pc[data-y="${y.id}"] input`).forEach(i=>i.setAttribute('aria-label',t.value+' price')); }
+  touch(); recalc();
+});
+$('#mx').addEventListener('click',e=>{
+  const sv=e.target.closest('[data-saveyard]'); if(sv){ saveYardFromColumn(sv.dataset.saveyard); return; }
+  const ri=e.target.closest('[data-rmitem]'), ry=e.target.closest('[data-rmyard]');
+  if(ri){ job.items=job.items.filter(x=>x.id!==ri.dataset.rmitem); delete job.prices[ri.dataset.rmitem]; if(job.est) delete job.est[ri.dataset.rmitem]; if(job.estp) delete job.estp[ri.dataset.rmitem]; touch(); renderMatrix(); }
+  if(ry){ job.yards=job.yards.filter(x=>x.id!==ry.dataset.rmyard); Object.values(job.prices).forEach(p=>delete p[ry.dataset.rmyard]); Object.values(job.estp||{}).forEach(p=>delete p[ry.dataset.rmyard]); touch(); renderMatrix(); }
+});
+$('#add-item').onclick=()=>{ const it={id:newId(),desc:'',qty:1,unit:'ea'}; job.items.push(it); touch(); renderMatrix();
+  document.querySelector(`#mx tr[data-item="${it.id}"] input[data-f="desc"]`)?.focus(); };
+$('#add-yard').onclick=()=>{ if(job.yards.length>=6){ toast('Up to 6 yards per comparison.'); return; }
+  const y={id:newId(),name:'Yard '+String.fromCharCode(65+job.yards.length),disc:0,delivery:0,tax:job.yards[0]?job.yards[0].tax:0}; job.yards.push(y); touch(); renderMatrix();
+  document.querySelector(`#mx input[data-yf="name"][data-y="${y.id}"]`)?.select(); };
+$('#job-name').addEventListener('input',e=>{ job.name=e.target.value; $('#job-title').textContent=job.name||'Compare local stores'; touch(); $('#rfq').value=rfqText(); });
+$('#job-zip').addEventListener('input',e=>{ job.zip=e.target.value.trim(); touch(); $('#rfq').value=rfqText(); });
+$('#new-job').onclick=()=>{ job=blankJob(); renderJob(); toast('New comparison started'); };
+$('#copy-rfq').onclick=()=>copyText(rfqText(),'Quote request copied. Paste it into an email or text to each yard.');
+
+function copyText(t,msg){
+  const done=()=>toast(msg), fail=()=>toast('Couldn\'t copy. Select the text and copy it yourself.');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done,fail); else fail();
+}
+
+/* estimated vs quoted */
+const isEst=(it,y)=>!!(job.estp&&job.estp[it.id]&&job.estp[it.id][y.id]);
+
+/* find local stores */
+let found=[], findCtl=null;
+$('#find-btn').onclick=async()=>{
+  const z=(job.zip||zip||'').trim();
+  if(!/^\d{5}/.test(z)){ $('#job-zip').focus(); toast('Add the job ZIP first.'); return; }
+  if(!cap.sample){ toast('Finding stores needs Claude. Open this page on claude.ai while signed in.'); return; }
+  findCtl?.abort(); findCtl=new AbortController();
+  const btn=$('#find-btn'), panel=$('#find-panel'); btn.disabled=true; btn.textContent='Searching…';
+  panel.hidden=false; panel.innerHTML=loading('Looking for stores near '+z,'Big-box stores, independent lumber yards and regional building suppliers.');
+  try{
+    const r=await cap.sample.json(`A residential contractor needs lumber and building materials for a job at ZIP ${z}.
+List the specific stores near this ZIP that sell framing lumber to contractors: the big-box home centers with locations nearby, and the independent or regional lumber yards and building suppliers you know of in or near this area.
+Only list businesses you believe actually exist. Your knowledge may be out of date, so rate each one: "high" if you are confident it exists and serves this area, "medium" if fairly sure, "low" if unsure.
+Return JSON only: {"stores":[{"name":"business name as customers know it, include the location name for chains","kind":"Big-box"|"Independent yard"|"Regional dealer"|"Specialty"|"Wholesale","area":"city, neighborhood or street if known","known_for":"one short line","confidence":"high|medium|low"}]} (up to 8, nearest and most useful first)`,{signal:findCtl.signal});
+    found=arr(r&&r.stores).slice(0,8).map(x=>({name:String(x.name||'').slice(0,60),kind:String(x.kind||''),area:String(x.area||''),known:String(x.known_for||''),conf:String(x.confidence||'medium').toLowerCase()})).filter(x=>x.name);
+    if(!found.length) throw {code:'invalid_json'};
+    const room=6-job.yards.filter(y=>!isPlaceholder(y)).length;
+    let picked=0;
+    panel.innerHTML=`<b>Stores near ${esc(z)}</b>
+      <ul class="store-list">${found.map((f,i)=>{ const on=f.conf!=='low' && picked<Math.min(4,room); if(on) picked++;
+        return `<li><label><input type="checkbox" data-fi="${i}" ${on?'checked':''}><span><span class="nm">${esc(f.name)}</span> <span class="meta">${esc(f.kind)}${f.area?' · '+esc(f.area):''}</span><br><span class="meta">${esc(f.known)}</span>${f.conf==='low'?'<br><span class="low">Not sure this one still exists. Check the map first.</span>':''}</span><a href="${mapsLink(f.name+(f.area?' '+f.area:''),z)}" target="_blank" rel="noopener">Check on Maps ↗</a></label></li>`; }).join('')}</ul>
+      <p class="hint">Store names come from Claude's general knowledge and can be out of date. Check each one on the map before you call. Up to 6 stores per comparison.</p>
+      <div class="actions"><button class="btn sm tape" id="find-add">Add stores and estimate prices</button><button class="btn sm ghost" id="find-cancel">Cancel</button></div>`;
+  }catch(err){ panel.hidden=true; toast(aiError(err)); }
+  finally{ btn.disabled=false; btn.textContent='Find local stores'; }
+};
+const isPlaceholder=y=>/^Yard [A-Z]$/.test(y.name) && !job.items.some(it=>priceOf(it,y)>0);
+$('#find-panel').addEventListener('click',async e=>{
+  if(e.target.closest('#find-cancel')){ $('#find-panel').hidden=true; return; }
+  if(!e.target.closest('#find-add')) return;
+  const sel=[...document.querySelectorAll('#find-panel [data-fi]:checked')].map(c=>found[+c.dataset.fi]).filter(Boolean);
+  if(!sel.length){ toast('Pick at least one store.'); return; }
+  if(job.example){ job=blankJob(); job.zip=$('#job-zip').value.trim()||zip; job.items=exampleJob().items; renderJobHead(); }
+  job.yards=job.yards.filter(y=>!isPlaceholder(y));
+  const z=(job.zip||zip).trim(), tax=job.yards[0]?job.yards[0].tax:0;
+  const added=sel.slice(0,Math.max(0,6-job.yards.length)).map(f=>({id:newId(),name:f.name,kind:f.kind,area:f.area,maps:mapsLink(f.name+(f.area?' '+f.area:''),z),disc:0,delivery:0,tax}));
+  if(!added.length){ toast('This comparison already has 6 stores. Remove one first.'); return; }
+  job.yards.push(...added); job.estp ||= {};
+  $('#find-panel').hidden=true; touch(); renderMatrix();
+  const items=job.items.filter(it=>it.desc.trim());
+  if(!items.length){ toast('Stores added. Add items, then use Estimate area prices or type quotes.'); return; }
+  toast('Stores added. Estimating prices for each…');
+  try{
+    const r=await cap.sample.json(`You are a lumber pricing analyst. Near ZIP ${z}, estimate what each store below would typically charge a contractor at the counter (before account discount) for each item, per the unit given, in USD. You do not have live prices; base it on each store's type and usual price position (big-box shelf pricing, independent yard counter pricing, regional dealer pricing) and the local market. Also estimate a typical contractor account discount % for each store type (0 if they don't usually give one), a typical delivery fee in USD, and the local sales tax %.
+Stores:
+${added.map((y,i)=>`${i}: ${y.name} (${y.kind})`).join('\n')}
+Items:
+${items.map((it,i)=>`${i}: ${it.desc} (per ${it.unit})`).join('\n')}
+Return JSON only: {"tax":number,"stores":[{"s":0,"discount":number,"delivery":number,"prices":[{"i":0,"price":number}]}]}`);
+    const taxR=num(r&&r.tax);
+    arr(r&&r.stores).forEach(st=>{ const y=added[Math.round(num(st.s))]; if(!y) return;
+      if(num(st.discount)>0&&num(st.discount)<40) y.disc=String(Math.round(num(st.discount)));
+      if(num(st.delivery)>=0&&st.delivery!==undefined) y.delivery=String(Math.round(num(st.delivery)));
+      if(taxR>0&&taxR<15&&!num(y.tax)) y.tax=String(taxR);
+      arr(st.prices).forEach(pp=>{ const it=items[Math.round(num(pp.i))], v=num(pp.price); if(!it||!(v>0)) return;
+        if(priceOf(it,y)>0 && !isEst(it,y)) return;
+        (job.prices[it.id] ||= {})[y.id]=String(Math.round(v*100)/100); (job.estp[it.id] ||= {})[y.id]=true; }); });
+    touch(); renderMatrix(); toast('Estimated prices filled in. Replace them with real quotes as they come in.');
+  }catch(err){ toast(aiError(err)+' Stores were still added.'); }
+});
+
+/* my yards */
+let myYards=[], myConfirm=null, myChain=Promise.resolve();
+const myCol = () => cap.db.collection('data/users/'+cap.uid+'/lumber/yards');
+const norm = t => String(t||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const savedMatch = y => myYards.find(m=>(y.savedId&&m.id===y.savedId)||norm(m.name)===norm(y.name));
+const yardFromSaved = m => ({id:newId(),savedId:m.id,name:m.name,kind:m.kind||'',area:m.area||'',maps:m.maps||mapsLink(m.name+(m.area?' '+m.area:''),zip),disc:String(m.disc||0),delivery:String(m.delivery||0),tax:String(m.tax||0)});
+function renderMyYards(state){
+  const el=$('#my-list');
+  $('#my-count').textContent = myYards.length ? `${myYards.length} saved` : '';
+  $('#my-use').hidden = !myYards.length;
+  if(state==='nodb'){ el.innerHTML='<li class="my-empty">Sign in on claude.ai to save your yards. Only you can see them.</li>'; $('#my-add-box').hidden=true; return; }
+  if(!myYards.length){ el.innerHTML='<li class="my-empty">No yards saved yet. Use Find local stores above and press ☆ on the ones you use, or add one below.</li>'; return; }
+  el.innerHTML=myYards.map(m=>`<li data-my="${esc(m.id)}">
+    <div class="my-top"><b>${esc(m.name)}</b><button class="linkbtn ${myConfirm===m.id?'danger':''}" data-mydel="${esc(m.id)}">${myConfirm===m.id?'Confirm remove':'Remove'}</button></div>
+    <span class="my-meta">${esc(m.kind||'Yard')}${m.area?' · '+esc(m.area):''} · <a href="${esc(m.maps||mapsLink(m.name+(m.area?' '+m.area:''),zip))}" target="_blank" rel="noopener">Map ↗</a></span>
+    <div class="my-terms">
+      <label>Discount %<input data-myf="disc" inputmode="decimal" value="${esc(m.disc||'')}" placeholder="0"></label>
+      <label>Delivery $<input data-myf="delivery" inputmode="decimal" value="${esc(m.delivery||'')}" placeholder="0"></label>
+      <label>Tax %<input data-myf="tax" inputmode="decimal" value="${esc(m.tax||'')}" placeholder="0"></label>
+    </div></li>`).join('');
+}
+function myWrite(fn, okMsg){
+  if(!cap.db||!cap.uid){ toast('Saving yards needs you signed in on claude.ai.'); return Promise.resolve(false); }
+  myChain=myChain.then(fn).then(()=>{ if(okMsg) toast(okMsg); return true; }).catch(()=>{ toast('Couldn\'t save the yard. Try again.'); return false; });
+  return myChain;
+}
+async function saveYardFromColumn(yid){
+  const y=job.yards.find(x=>x.id===yid); if(!y) return;
+  const m=savedMatch(y);
+  if(m){ y.savedId=m.id; toast(`${y.name} is already in My yards.`); return; }
+  const id=newId();
+  const ok=await myWrite(()=>myCol().doc(id).set({name:y.name,kind:y.kind||'',area:y.area||'',maps:y.maps||'',disc:num(y.disc),delivery:num(y.delivery),tax:num(y.tax),createdAt:Date.now()}), `Saved ${y.name} to My yards`);
+  if(ok){ y.savedId=id; touch(); }
+}
+$('#my-add').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const name=$('#my-name').value.trim(); if(!name){ $('#my-name').focus(); return; }
+  if(myYards.some(m=>norm(m.name)===norm(name))){ toast('That yard is already saved.'); return; }
+  const area=$('#my-area').value.trim();
+  const ok=await myWrite(()=>myCol().doc(newId()).set({name,kind:$('#my-kind').value,area,maps:mapsLink(name+(area?' '+area:''),(job.zip||zip)),disc:num($('#my-disc').value),delivery:num($('#my-del').value),tax:num($('#my-tax').value),createdAt:Date.now()}), `Saved ${name}`);
+  if(ok){ ['#my-name','#my-area','#my-disc','#my-del','#my-tax'].forEach(s=>$(s).value=''); }
+});
+$('#my-list').addEventListener('change',e=>{
+  const f=e.target.dataset.myf; if(!f) return;
+  const id=e.target.closest('[data-my]').dataset.my, v=num(e.target.value);
+  myWrite(()=>myCol().doc(id).update({[f]:v}));
+  // keep matching columns in the open comparison in step
+  let changed=false; job.yards.forEach(y=>{ const m=savedMatch(y); if(m&&m.id===id){ y[f]=String(v); changed=true; } });
+  if(changed){ touch(); renderMatrix(); }
+});
+$('#my-list').addEventListener('click',e=>{
+  const d=e.target.closest('[data-mydel]'); if(!d) return;
+  const id=d.dataset.mydel;
+  if(myConfirm!==id){ myConfirm=id; renderMyYards(); return; }
+  myConfirm=null; myWrite(()=>myCol().doc(id).delete(),'Yard removed');
+});
+$('#my-use').onclick=()=>{
+  if(job.example){ job=blankJob(); renderJob(); toast('New comparison started with your yards.'); return; }
+  job.yards=job.yards.filter(y=>!isPlaceholder(y));
+  const missing=myYards.filter(m=>!job.yards.some(y=>{ const s=savedMatch(y); return s&&s.id===m.id; }));
+  if(!missing.length){ toast('Your yards are already in this comparison.'); return; }
+  const room=6-job.yards.length;
+  if(room<=0){ toast('This comparison already has 6 stores. Remove one first.'); return; }
+  job.yards.push(...missing.slice(0,room).map(yardFromSaved)); touch(); renderMatrix();
+  toast(missing.length>room?`Added ${room}. The comparison holds 6 stores.`:'Your yards were added.');
+};
+
+/* paste a takeoff */
+function simpleParse(text){
+  return text.split(/\n+/).map(s=>s.trim()).filter(Boolean).map(s=>{
+    const m=s.match(/^(\d+(?:\.\d+)?)\s*(ea|pcs?|pieces?|sheets?|lf|bf|mbf|bundles?|boxes?|lifts?)?\.?\s+(.*)$/i);
+    if(m) return {desc:m[3], qty:num(m[1]), unit:(m[2]||'ea').toLowerCase().replace(/^pcs?$|^pieces?$/,'ea').replace(/^sheets$/,'sheet')};
+    return {desc:s, qty:1, unit:'ea'}; });
+}
+$('#paste-btn').onclick=async()=>{
+  const text=$('#paste-text').value.trim(); if(!text){ $('#paste-text').focus(); return; }
+  const btn=$('#paste-btn'); let rows=null;
+  if(cap.sample){
+    btn.disabled=true; btn.textContent='Reading…'; $('#paste-hint').textContent='';
+    try{
+      const r=await cap.sample.json(`Convert this contractor's material takeoff into line items. Keep the contractor's specs (size, length, grade, species) in the description, written clearly (e.g. "2×6 × 16 ft #2 SYP"). Use units ea, sheet, LF, bundle or box. Do not add items that are not in the list.
+Takeoff:
+"""${text.slice(0,6000)}"""
+Return JSON only: {"items":[{"desc":"","qty":number,"unit":""}]}`,{modelTier:'quick'});
+      rows=arr(r&&r.items).map(x=>({desc:String(x.desc||''),qty:num(x.qty)||1,unit:String(x.unit||'ea')})).filter(x=>x.desc);
+    }catch(err){ rows=null; }
+    btn.disabled=false; btn.textContent='Add to table';
+  }
+  if(!rows||!rows.length) rows=simpleParse(text);
+  rows=rows.slice(0,60);
+  job.items=job.items.filter(it=>it.desc.trim()||Object.values(job.prices[it.id]||{}).some(v=>num(v)>0));
+  rows.forEach(r=>job.items.push({id:newId(),...r}));
+  $('#paste-text').value=''; $('#paste-hint').textContent=`Added ${rows.length} item${rows.length===1?'':'s'}.`;
+  touch(); renderMatrix();
+};
+
+/* area price estimate for the job's items */
+$('#est-btn').onclick=async()=>{
+  const items=job.items.filter(it=>it.desc.trim());
+  if(!items.length){ toast('Add some items first.'); return; }
+  const z=job.zip||zip; if(!z){ $('#job-zip').focus(); toast('Add the job ZIP first.'); return; }
+  if(!cap.sample){ toast('Estimates need Claude. Open this page on claude.ai while signed in.'); return; }
+  estCtl?.abort(); estCtl=new AbortController();
+  const btn=$('#est-btn'); btn.disabled=true; btn.textContent='Estimating…';
+  try{
+    const r=await cap.sample.json(`You are a lumber pricing analyst. Estimate typical contractor counter prices (before account discounts) at lumber yards near ZIP ${z} for each line, per the unit given, in USD. Your knowledge may lag the market; give an honest range.
+${items.map((it,i)=>`${i}: ${it.desc} (per ${it.unit})`).join('\n')}
+Return JSON only: {"estimates":[{"i":0,"low":number,"high":number,"note":"short note if useful"}]}`,{signal:estCtl.signal});
+    const est={}; arr(r&&r.estimates).forEach(x=>{ const it=items[Math.round(num(x.i))]; const lo=num(x.low), hi=num(x.high)||lo; if(it&&(lo||hi)) est[it.id]={low:Math.min(lo,hi),high:Math.max(lo,hi),note:String(x.note||'')}; });
+    if(!Object.keys(est).length) throw {code:'invalid_json'};
+    job.est=est; touch(); renderMatrix(); toast('Area estimates added. Cells more than 10% over are marked.');
+  }catch(err){ toast(aiError(err)); }
+  finally{ btn.disabled=false; btn.textContent='Estimate area prices'; }
+};
+
+/* ---------- saving ---------- */
+const col = () => cap.db.collection('data/users/'+cap.uid+'/lumber/quotes');
+let saveTimer=null, saveChain=Promise.resolve();
+const jobDoc = () => ({shareKey:job.shareKey||'', name:job.name||'', zip:job.zip||'', items:job.items, yards:job.yards, prices:job.prices, est:job.est||{}, estp:job.estp||{}, createdAt:job.createdAt||Date.now(), updatedAt:Date.now()});
+function touch(){
+  if(job.example){ job.example=false; renderJobHead(); }
+  if(!job.id||!cap.db) return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{ const id=job.id, d=jobDoc(); saveChain=saveChain.then(()=>col().doc(id).set(d)).catch(()=>toast('Changes didn\'t save. Check your connection.')); },800);
+}
+$('#save-job').onclick=async()=>{
+  if(!cap.db||!cap.uid){ toast('Saving needs you signed in on claude.ai.'); return; }
+  if(!job.name.trim()){ $('#job-name').focus(); toast('Give the job a name first.'); return; }
+  job.example=false; job.id=newId(); job.createdAt=Date.now();
+  try{ await col().doc(job.id).set(jobDoc()); renderJobHead(); toast('Comparison saved'); }
+  catch(e){ job.id=null; toast('Couldn\'t save. Try again.'); }
+};
+function renderSaved(state){
+  const el=$('#saved');
+  if(state==='nodb'){ el.innerHTML='<div class="empty"><h3>Save comparisons to come back to them</h3><p>Open this page on claude.ai while signed in to save jobs. Only you can see them.</p></div>'; return; }
+  if(state==='loading'){ el.innerHTML='<p class="hint">Loading saved comparisons…</p>'; return; }
+  if(state==='slow'){ el.innerHTML='<p class="hint">Saved comparisons can\'t be reached yet. They\'ll show up when the connection returns.</p>'; return; }
+  if(!saved.length){ el.innerHTML='<div class="empty"><h3>No saved comparisons yet</h3><p>Name a job and press Save. Only you can see saved comparisons, and they update as you enter new quotes.</p></div>'; return; }
+  el.innerHTML='<div class="saved-grid">'+saved.map(s=>{
+    const prev=job; job={...s, prices:s.prices||{}}; const T=yardTotals().filter(t=>t.missing===0&&t.sub>0); job=prev;
+    const best=T.length?T.reduce((a,b)=>a.total<b.total?a:b):null;
+    return `<div class="card saved"><button class="open" data-open="${esc(s.id)}"><h3>${esc(s.name||'Untitled job')}</h3>
+      <span class="hint">${arr(s.items).length} items · ${arr(s.yards).length} yards${s.zip?' · '+esc(s.zip):''}</span>
+      <span>${best?`Best: <b class="mono">${money(best.total)}</b> at ${esc(best.y.name)}`:'<span class="muted">Not fully priced yet</span>'}</span></button>
+      <div class="meta"><span>Updated ${fmtDate(s.updatedAt||s.createdAt)}</span><button class="linkbtn ${confirmDel===s.id?'danger':''}" data-del="${esc(s.id)}">${confirmDel===s.id?'Confirm delete':'Delete'}</button></div></div>`; }).join('')+'</div>';
+}
+$('#saved').addEventListener('click',async e=>{
+  const o=e.target.closest('[data-open]'), d=e.target.closest('[data-del]');
+  if(o){ const s=saved.find(x=>x.id===o.dataset.open); if(!s) return;
+    job={id:s.id,shareKey:s.shareKey||'',example:false,name:s.name||'',zip:s.zip||'',items:arr(s.items),yards:arr(s.yards),prices:s.prices||{},est:s.est||{},estp:s.estp||{},createdAt:s.createdAt||0};
+    renderJob(); window.scrollTo({top:0,behavior:'smooth'}); }
+  if(d){ const id=d.dataset.del;
+    if(confirmDel!==id){ confirmDel=id; renderSaved(); return; }
+    confirmDel=null;
+    try{ await col().doc(id).delete(); if(job.id===id){ job.id=null; renderJobHead(); } toast('Comparison deleted'); }catch(err){ toast('Couldn\'t delete. Try again.'); } }
+});
+
+/* ---------- my plans ---------- */
+const PLAN_CATS=['Walls','Floor','Roof','Sheathing','Beams & headers','Treated','Other'];
+const EX_PLAN = {
+  example:true, name:'Example: single-story ranch, 2,000 sq ft', zip:'78704', waste:10, thumb:'',
+  analysis:{
+    house:{name:'Single-story ranch',sqft:2000,stories:1,bedrooms:3,baths:2,foundation:'Slab on grade',walls:'2×4 @ 16 in o.c., 8 ft plates',roof:'Engineered trusses, 6/12 gable',garage:'Attached 2-car'},
+    confidence:'medium', read_notes:'Example data showing what an analysis looks like. Upload your own plan sheets to get a real takeoff.',
+    takeoff:[
+      {cat:'Walls',desc:'2×4 × 92⅝ in stud',qty:620,unit:'ea',low:3.6,high:4.3,basis:'Exterior and interior walls at 16 in o.c. plus corners, Ts and openings'},
+      {cat:'Walls',desc:'2×4 × 16 ft #2 (plates)',qty:150,unit:'ea',low:8.6,high:10.4,basis:'Bottom plate plus double top plate'},
+      {cat:'Treated',desc:'2×4 × 16 ft treated sill plate',qty:22,unit:'ea',low:11,high:14,basis:'Exterior and slab-bearing walls'},
+      {cat:'Beams & headers',desc:'2×10 × 16 ft #2 (headers)',qty:24,unit:'ea',low:22,high:28,basis:'Doubled headers over windows and doors'},
+      {cat:'Beams & headers',desc:'LVL 1¾ × 11⅞ in',qty:60,unit:'LF',low:7,high:9,basis:'Garage door and great room openings, 3-ply'},
+      {cat:'Roof',desc:'Roof trusses, 28 ft span common',qty:46,unit:'ea',low:140,high:190,basis:'24 in o.c. along a 90 ft ridge line; quote from a truss supplier'},
+      {cat:'Roof',desc:'2×4 × 16 ft #2 (bracing and blocking)',qty:40,unit:'ea',low:8.6,high:10.4,basis:'Truss bracing per typical truss package'},
+      {cat:'Roof',desc:'2×6 × 16 ft #2 (sub-fascia)',qty:14,unit:'ea',low:12.6,high:15.4,basis:'Eaves and rakes'},
+      {cat:'Sheathing',desc:'7/16 in OSB wall sheathing 4×8',qty:90,unit:'sheet',low:14,high:18,basis:'Exterior wall area less large openings'},
+      {cat:'Sheathing',desc:'7/16 in OSB roof sheathing 4×8',qty:82,unit:'sheet',low:14,high:18,basis:'Roof area at 6/12 with overhangs'},
+    ],
+    watch:[
+      {issue:'Garage door header not sized',why:'A 16 ft opening needs an engineered beam. Get the size from the engineer or LVL supplier before ordering.',severity:'high'},
+      {issue:'No wall bracing or shear wall schedule',why:'Local code may require braced wall panels or extra sheathing nailing. This can change sheathing and hold-down costs.',severity:'medium'},
+      {issue:'Truss layout not included',why:'Trusses are priced from the supplier\'s layout. Send them the plans early. Lead times can run several weeks.',severity:'medium'},
+      {issue:'2×4 exterior walls',why:'Check your climate zone. Many areas need 2×6 walls or continuous insulation to meet the energy code.',severity:'low'},
+    ],
+    questions:['What size is the garage door header and great room beam?','Is there a braced wall or shear wall plan?','Are ceiling heights 8 ft throughout, or are any rooms vaulted?','Who provides the truss layout and engineering?'],
+    not_included:['Windows, doors and trim','Hardware and fasteners (hangers, straps, nails)','Concrete and rebar','Delivery fees and sales tax'],
+    framing_labor:{low:14000,high:22000,basis:'About $7–11 per sq ft for this kind of house'}
+  }
+};
+let curPlan = EX_PLAN; planReady=true;
+let planPages = [], pdfDoc = null, imgLimits = null, plansSaved = [], planConfirm = null, planCtl = null;
+const planCol = () => cap.db.collection('data/users/'+cap.uid+'/lumber/plans');
+
+function loadPdfJs(){
+  return new Promise((res,rej)=>{
+    if(window.pdfjsLib) return res(window.pdfjsLib);
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{ const L=window.pdfjsLib; if(!L) return rej(new Error('pdf')); L.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(L); };
+    s.onerror=()=>rej(new Error('pdf')); document.head.appendChild(s);
+  });
+}
+const canvasBlob=(c,q)=>new Promise(r=>c.toBlob(b=>r(b),'image/jpeg',q));
+async function drawToBlob(source, w, h, maxSide, maxBytes){
+  let scale=Math.min(1,maxSide/Math.max(w,h)), q=.85, blob=null;
+  for(let i=0;i<5;i++){
+    const c=document.createElement('canvas'); c.width=Math.round(w*scale); c.height=Math.round(h*scale);
+    const g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(source,0,0,c.width,c.height);
+    blob=await canvasBlob(c,q); if(!maxBytes||blob.size<=maxBytes) return blob;
+    scale*=.8; q=Math.max(.6,q-.08);
+  }
+  return blob;
+}
+async function renderPdfPage(n, maxSide){
+  const page=await pdfDoc.getPage(n); const v1=page.getViewport({scale:1});
+  const scale=Math.min(4,maxSide/Math.max(v1.width,v1.height)); const v=page.getViewport({scale});
+  const c=document.createElement('canvas'); c.width=Math.round(v.width); c.height=Math.round(v.height);
+  const g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
+  await page.render({canvasContext:g,viewport:v}).promise; return c;
+}
+async function addPlanFiles(files){
+  const hint=$('#drop-hint');
+  for(const f of files){
+    if(planPages.length>=40) break;
+    try{
+      if(f.type==='application/pdf'||/\.pdf$/i.test(f.name)){
+        hint.textContent='Reading PDF…';
+        const L=await loadPdfJs(); pdfDoc=await L.getDocument({data:await f.arrayBuffer()}).promise;
+        for(let n=1;n<=Math.min(pdfDoc.numPages,40-planPages.length);n++){
+          const c=await renderPdfPage(n,300);
+          planPages.push({kind:'pdf',doc:pdfDoc,n,label:'Page '+n,thumb:c.toDataURL('image/jpeg',.7),sel:false});
+          renderPages();
+        }
+      } else if(/^image\//.test(f.type)){
+        const bmp=await createImageBitmap(f);
+        const c=document.createElement('canvas'); const sc=300/Math.max(bmp.width,bmp.height); c.width=Math.round(bmp.width*sc); c.height=Math.round(bmp.height*sc);
+        c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+        planPages.push({kind:'img',file:f,label:f.name.replace(/\.[a-z]+$/i,'').slice(0,18),thumb:c.toDataURL('image/jpeg',.7),sel:false});
+      }
+    }catch(e){ toast(/pdf/i.test(f.name)?'That PDF couldn\'t be read. Try exporting the sheets as images.':'One file couldn\'t be read.'); }
+  }
+  const max=imgLimits?imgLimits.maxCount:5;
+  let n=planPages.filter(p=>p.sel).length; planPages.forEach(p=>{ if(!p.sel&&n<max){ p.sel=true; n++; } });
+  hint.textContent='PDF or photos/scans of the sheets. Floor plans, elevations, sections and framing or foundation plans help most.';
+  renderPages();
+}
+function renderPages(){
+  const max=imgLimits?imgLimits.maxCount:5, n=planPages.filter(p=>p.sel).length;
+  $('#pages-wrap').hidden=!planPages.length;
+  $('#pages-count').textContent=`${n} of ${planPages.length} sheets selected · up to ${max} per analysis. Tap to choose.`;
+  $('#pages').innerHTML=planPages.map((p,i)=>`<button type="button" class="pg" data-pg="${i}" aria-pressed="${p.sel}"><img alt="" src="${p.thumb}"><span>${esc(p.label)}</span></button>`).join('');
+}
+$('#pages').addEventListener('click',e=>{
+  const b=e.target.closest('[data-pg]'); if(!b) return; const p=planPages[+b.dataset.pg];
+  const max=imgLimits?imgLimits.maxCount:5;
+  if(!p.sel && planPages.filter(x=>x.sel).length>=max){ toast(`Up to ${max} sheets per analysis. Unselect one first.`); return; }
+  p.sel=!p.sel; renderPages();
+});
+$('#pages-clear').onclick=()=>{ planPages=[]; pdfDoc=null; renderPages(); };
+$('#plan-files').addEventListener('change',e=>{ addPlanFiles([...e.target.files]); e.target.value=''; });
+const drop=$('#drop');
+['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{ e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t=>drop.addEventListener(t,()=>drop.classList.remove('over')));
+drop.addEventListener('drop',e=>{ e.preventDefault(); addPlanFiles([...(e.dataTransfer?.files||[])]); });
+
+function planPrompt(name,z,details,hasImages){
+  const S=snap, ref = !S.example && S.basket ? '\nFor reference, typical yard prices near this ZIP: '+BASKET.filter(b=>S.basket[b.k]).map(b=>`${b.name} $${S.basket[b.k][2]}–${S.basket[b.k][3]}/${b.unit}`).join('; ')+'.' : '';
+  return `You are an experienced residential framing estimator working for a builder.
+${hasImages?`The images are sheets from a set of house plans${name?` ("${name}")`:''}.`:'No plan images are provided; work from the description below.'} Build site ZIP: ${z||'unknown'}.
+${details?'Notes from the builder: '+details.slice(0,3000):''}
+Produce a framing lumber takeoff for the whole house: wall studs and plates, treated sill plates, headers and beams, floor framing (joists, rim, subfloor) unless slab, roof framing (trusses or rafters, ridge, ceiling joists), wall and roof sheathing, engineered lumber (LVL, I-joists), blocking and bracing. Give NET quantities before waste, in lengths a lumber yard sells. Where the plans don't show something, make a reasonable assumption and say so in "basis".
+Estimate typical lumber yard contractor prices (before account discounts) near the ZIP for each line, per unit.${ref}
+Then review the plans like a builder would: flag what to look out for (missing or unclear structural info, long spans, point loads, items needing an engineer or supplier, code and energy issues, details that drive cost) and list questions to send the designer.
+Return JSON only:
+{"house":{"name":"","sqft":number,"stories":number,"bedrooms":number,"baths":number,"foundation":"","walls":"e.g. 2x6 @ 16 in o.c., 9 ft plates","roof":"","garage":""},
+"confidence":"low|medium|high","read_notes":"1-2 sentences on what you could and couldn't read",
+"takeoff":[{"cat":"${PLAN_CATS.join('|')}","desc":"size, length, grade","qty":number,"unit":"ea|sheet|LF","low":number,"high":number,"basis":"short"}],
+"watch":[{"issue":"","why":"","severity":"high|medium|low"}] (4-8),
+"questions":["3-6 questions for the designer"],
+"not_included":["what this takeoff leaves out"],
+"framing_labor":{"low":number,"high":number,"basis":"short"}}`;
+}
+function normPlan(r){
+  r=r&&typeof r==='object'?r:{}; const h=r.house||{};
+  const takeoff=arr(r.takeoff).slice(0,80).map(t=>{ const lo=num(t.low), hi=num(t.high)||lo; return {cat:PLAN_CATS.includes(t.cat)?t.cat:'Other',desc:String(t.desc||'Item'),qty:num(t.qty),unit:String(t.unit||'ea'),low:Math.min(lo,hi),high:Math.max(lo,hi),basis:String(t.basis||'')}; }).filter(t=>t.qty>0);
+  if(!takeoff.length) throw {code:'invalid_json'};
+  const fl=r.framing_labor||{};
+  return {house:{name:String(h.name||''),sqft:num(h.sqft),stories:num(h.stories),bedrooms:num(h.bedrooms),baths:num(h.baths),foundation:String(h.foundation||''),walls:String(h.walls||''),roof:String(h.roof||''),garage:String(h.garage||'')},
+    confidence:String(r.confidence||'medium').toLowerCase(), read_notes:String(r.read_notes||''), takeoff,
+    watch:arr(r.watch).slice(0,10).map(w=>({issue:String(w.issue||''),why:String(w.why||''),severity:['high','medium','low'].includes(w.severity)?w.severity:'medium'})),
+    questions:arr(r.questions).slice(0,8).map(String), not_included:arr(r.not_included).slice(0,8).map(String),
+    framing_labor:num(fl.low)||num(fl.high)?{low:num(fl.low),high:num(fl.high)||num(fl.low),basis:String(fl.basis||'')}:null};
+}
+
+const wq=(t,w)=>Math.ceil(t.qty*(1+w/100));
+function planTotals(P){
+  const w=num(P.waste); let lo=0, hi=0;
+  P.analysis.takeoff.forEach(t=>{ const q=wq(t,w); lo+=q*t.low; hi+=q*t.high; });
+  return {lo,hi,mid:(lo+hi)/2};
+}
+function renderPlan(){
+  const P=curPlan, A=P.analysis, H=A.house, T=planTotals(P), w=num(P.waste);
+  const facts=[['Size',H.sqft?H.sqft.toLocaleString()+' sq ft':''],['Stories',H.stories||''],['Beds / baths',H.bedrooms?`${H.bedrooms} / ${H.baths||'?'}`:''],['Foundation',H.foundation],['Walls',H.walls],['Roof',H.roof],['Garage',H.garage]].filter(f=>f[1]);
+  const lab=A.framing_labor;
+  let body='';
+  PLAN_CATS.forEach(c=>{ const rows=A.takeoff.map((t,i)=>({t,i})).filter(x=>x.t.cat===c); if(!rows.length) return;
+    body+=`<tr><td class="cat" colspan="5">${esc(c)}</td></tr>`+rows.map(({t})=>{ const q=wq(t,w);
+      return `<tr><td>${esc(t.desc)}${t.basis?`<span class="note">${esc(t.basis)}</span>`:''}</td><td class="num">${q.toLocaleString()}</td><td class="muted">${esc(t.unit)}</td><td class="num">${range(t.low,t.high)}</td><td class="num">${money(q*t.low)}–${money(q*t.high)}</td></tr>`; }).join(''); });
+  $('#plan-result').innerHTML=`
+    <div class="head-row">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="form-tag">Lumber takeoff</span><h2 style="font-size:21px">${esc(P.name||H.name||'Your plan')}</h2></div>
+      ${P.example?'<span class="badge">Example. Upload your plans above</span>':`<span class="badge dim">${esc(A.confidence)} confidence</span>`}
+    </div>
+    ${A.read_notes?`<p class="hint">${esc(A.read_notes)}</p>`:''}
+    ${facts.length?`<div class="facts">${facts.map(f=>`<div class="fact"><span class="label">${f[0]}</span><b>${esc(f[1])}</b></div>`).join('')}</div>`:''}
+    <div class="cost-row">
+      <div class="sum win"><span class="label">Lumber package today</span><strong>${money(T.lo)}–${money(T.hi)}</strong><span class="sub">${P.zip?'near '+esc(P.zip)+', ':''}before account discounts, with ${w}% waste</span></div>
+      <div class="sum"><span class="label">Lumber per sq ft</span><strong>${H.sqft?money2(T.mid/H.sqft):'—'}</strong><span class="sub">${H.sqft?'of finished floor area':'needs the square footage'}</span></div>
+      <div class="sum"><span class="label">With framing labor</span><strong>${lab?`${money(T.lo+lab.low)}–${money(T.hi+lab.high)}`:'—'}</strong><span class="sub">${lab?`Labor ${money(lab.low)}–${money(lab.high)}. ${esc(lab.basis)}`:'No labor estimate'}</span></div>
+    </div>
+    <div class="tools-row">
+      <label class="waste">Waste factor <input type="range" id="plan-waste" min="0" max="20" step="1" value="${w}"> <b class="mono" id="plan-waste-v">${w}%</b></label>
+      <div class="actions">
+        <button class="btn sm tape" id="plan-to-quote">Get quotes for this plan</button>
+        ${P.example?'':P.id?'<span class="hint">Saved</span>':'<button class="btn sm" id="plan-save">Save plan</button>'}
+      </div>
+    </div>
+    <div class="table-wrap"><table class="takeoff">
+      <thead><tr><th>Item</th><th class="num">Qty</th><th>Unit</th><th class="num">Unit price</th><th class="num">Cost</th></tr></thead>
+      <tbody>${body}</tbody></table></div>
+    ${A.not_included.length?`<p class="hint"><b style="color:var(--ink)">Not included:</b> ${A.not_included.map(esc).join(' · ')}</p>`:''}
+    <p class="note-box">Quantities are Claude's reading of the plans and can miss or misread details. Check them against your own takeoff and the truss and beam suppliers' numbers. Prices are estimates for the area, not quotes. "Get quotes for this plan" sends the list to Quotes &amp; Discounts with your saved yards.</p>`;
+  renderFuture(); renderWatch();
+}
+function renderFuture(){
+  if(!fc) fc=modelFc(anchor);
+  const T=planTotals(curPlan);
+  const H=[[0,'Today'],[2,'In 6 months'],[4,'In 1 year'],[8,'In 2 years'],[12,'In 3 years']];
+  const f=q=>{ if(q===0) return {m:1,l:1,h:1}; const pts=fc.points;
+    if(q<=4){ const p=pts[q-1]; return {m:p.mid/anchor,l:p.low/anchor,h:p.high/anchor}; }
+    const p=pts[3], g=Math.pow(1.03,(q-4)/4), widen=1+.06*Math.sqrt(q-4);
+    return {m:p.mid/anchor*g,l:p.low/anchor*g/widen,h:p.high/anchor*g*widen}; };
+  const rows=H.map(([q,l])=>{ const k=f(q); return {l,q,mid:T.mid*k.m,lo:T.lo*k.l,hi:T.hi*k.h,chg:(k.m-1)*100}; });
+  const max=Math.max(...rows.map(r=>r.hi));
+  $('#plan-future').innerHTML=`<span class="form-tag">Build it later</span>
+    <h3>What the same lumber package could cost</h3>
+    <div class="fut">${rows.map(r=>`<div class="fut-row"><span>${r.l}</span><div class="track" title="${money(r.lo)}–${money(r.hi)}"><span style="width:${(r.mid/max*100).toFixed(1)}%"></span></div><span class="mono">${money(r.mid)}${r.q?`<span class="chg ${r.chg>=0?'up':'down'}">${r.chg>=0?'+':''}${r.chg.toFixed(0)}%</span>`:''}</span></div>`).join('')}</div>
+    <p class="hint">Likely range in 1 year: ${money(rows[2].lo)}–${money(rows[2].hi)}; in 3 years: ${money(rows[4].lo)}–${money(rows[4].hi)}.</p>
+    <p class="note-box">Uses the ${fc.source==='claude'?'Claude outlook':'trend model'} on the Market tab for the next 4 quarters, then adds about 3% a year. Panels and engineered lumber don't always move with framing lumber, so treat this as a direction, not a quote.</p>`;
+}
+function renderWatch(){
+  const A=curPlan.analysis, order={high:0,medium:1,low:2};
+  const W=A.watch.slice().sort((a,b)=>order[a.severity]-order[b.severity]);
+  $('#plan-watch').innerHTML=`<span class="form-tag">Look out for</span>
+    ${W.length?`<ul class="watch-list">${W.map(x=>`<li class="${x.severity}"><b>${esc(x.issue)}<span class="sev ${x.severity}">${x.severity}</span></b>${esc(x.why)}</li>`).join('')}</ul>`:'<p class="hint">Nothing flagged.</p>'}
+    ${A.questions.length?`<div class="tools-row"><h3>Questions for the designer</h3><button class="btn sm ghost" id="copy-rfi">Copy</button></div><ul class="plain" style="font-size:13.5px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px">${A.questions.map(q=>`<li>${esc(q)}</li>`).join('')}</ul>`:''}`;
+}
+$('#plan-watch').addEventListener('click',e=>{ if(e.target.closest('#copy-rfi')) copyText(`Questions on ${curPlan.name||'the plans'}:\n\n`+curPlan.analysis.questions.map((q,i)=>`${i+1}. ${q}`).join('\n'),'Questions copied'); });
+
+let planSaveT=null;
+$('#plan-result').addEventListener('input',e=>{ if(e.target.id==='plan-waste') $('#plan-waste-v').textContent=e.target.value+'%'; });
+$('#plan-result').addEventListener('change',e=>{
+  if(e.target.id!=='plan-waste') return;
+  curPlan.waste=num(e.target.value); renderPlan();
+  document.getElementById('plan-waste')?.focus();
+  if(curPlan.id&&cap.db){ clearTimeout(planSaveT); const id=curPlan.id, w=curPlan.waste; planSaveT=setTimeout(()=>planCol().doc(id).update({waste:w,updatedAt:Date.now()}).catch(()=>{}),800); }
+});
+$('#plan-result').addEventListener('click',async e=>{
+  if(e.target.closest('#plan-to-quote')){
+    const P=curPlan, w=num(P.waste);
+    job=blankJob(); job.name=P.name||P.analysis.house.name||'House plan'; job.zip=P.zip||zip;
+    job.items=P.analysis.takeoff.map(t=>({id:newId(),desc:t.desc,qty:wq(t,w),unit:t.unit}));
+    job.est={}; job.items.forEach((it,i)=>{ const t=P.analysis.takeoff[i]; job.est[it.id]={low:t.low,high:t.high,note:t.basis}; });
+    renderJob(); selectTab('compare'); window.scrollTo({top:0,behavior:'smooth'});
+    toast(myYards.length?'Takeoff sent with your saved yards. Press Find local stores to add more.':'Takeoff sent. Press Find local stores to add stores near the site.');
+    return;
+  }
+  if(e.target.closest('#plan-save')){
+    if(!cap.db||!cap.uid){ toast('Saving plans needs you signed in on claude.ai.'); return; }
+    const id=newId(), P=curPlan;
+    try{ await planCol().doc(id).set({name:P.name||P.analysis.house.name||'House plan',zip:P.zip||'',waste:num(P.waste),thumb:P.thumb||'',analysis:P.analysis,createdAt:Date.now(),updatedAt:Date.now()});
+      curPlan.id=id; renderPlan(); toast('Plan saved'); }catch(err){ toast('Couldn\'t save. Try again.'); }
+  }
+});
+
+$('#plan-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const sel=planPages.filter(p=>p.sel), details=$('#plan-details').value.trim(), name=$('#plan-name').value.trim(), z=$('#plan-zip').value.trim()||zip;
+  if(!sel.length&&!details){ toast('Add plan sheets or describe the house first.'); return; }
+  if(!cap.sample){ toast('Plan analysis needs Claude. Open this page on claude.ai while signed in.'); return; }
+  if(sel.length&&!imgLimits){ toast('This view can\'t send images to Claude. Describe the house instead.'); return; }
+  planCtl?.abort(); planCtl=new AbortController();
+  const btn=$('#plan-go'); btn.disabled=true; btn.textContent='Analyzing…';
+  const prev=curPlan;
+  $('#plan-result').innerHTML=loading('Reading the plans','Preparing the sheets…');
+  try{
+    const maxB=imgLimits?imgLimits.maxInputBytes:0, blobs=[]; let thumb='';
+    for(const p of sel){
+      let blob;
+      if(p.kind==='pdf'){ pdfDoc=p.doc; const c=await renderPdfPage(p.n,2400); blob=await drawToBlob(c,c.width,c.height,2400,maxB); }
+      else { const bmp=await createImageBitmap(p.file); blob=await drawToBlob(bmp,bmp.width,bmp.height,2400,maxB); }
+      blobs.push(blob);
+    }
+    if(sel[0]){ const im=new Image(); im.src=sel[0].thumb; await im.decode().catch(()=>{}); const c=document.createElement('canvas'); const sc=160/Math.max(im.width||1,im.height||1); c.width=Math.max(1,Math.round(im.width*sc)); c.height=Math.max(1,Math.round(im.height*sc)); c.getContext('2d').drawImage(im,0,0,c.width,c.height); thumb=c.toDataURL('image/jpeg',.6); }
+    const sub=document.querySelector('#plan-result .loading .hint'); if(sub) sub.textContent=`Measuring walls and roof from ${blobs.length||'no'} sheet${blobs.length===1?'':'s'}. This can take a minute.`;
+    const raw=await cap.sample.json(planPrompt(name,z,details,blobs.length>0),{signal:planCtl.signal,modelTier:'complex',...(blobs.length?{images:blobs}:{}),
+      onText:({text})=>{ const n=(text.match(/"desc"/g)||[]).length; const s=document.querySelector('#plan-result .loading .hint'); if(s&&n) s.textContent=`Listed ${n} lumber line${n>1?'s':''} so far…`; }});
+    const analysis=normPlan(raw);
+    curPlan={example:false,id:null,name:name||analysis.house.name||'House plan',zip:z,waste:10,thumb,analysis,createdAt:Date.now()};
+    renderPlan(); $('#plan-result').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(err){
+    curPlan=prev; renderPlan();
+    const c=err&&err.code;
+    toast(c==='image_rejected'?'One sheet was rejected. Try fewer or smaller sheets.':c==='images_unavailable'?'This view can\'t send images to Claude. Describe the house instead.':c==='invalid_json'?'The analysis came back incomplete. Try fewer sheets or add a short description.':aiError(err));
+  }finally{ btn.disabled=false; btn.textContent='Analyze plans'; }
+});
+
+function renderPlansSaved(state){
+  const el=$('#plan-saved');
+  if(state==='nodb'){ el.innerHTML='<div class="empty"><p>Sign in on claude.ai to save plans. Only you can see them.</p></div>'; return; }
+  if(!plansSaved.length){ el.innerHTML='<div class="empty"><p>No saved plans yet. Analyze a plan and press Save plan.</p></div>'; return; }
+  el.innerHTML='<div style="display:flex;flex-direction:column;gap:8px">'+plansSaved.map(p=>{ let tot=''; try{ const t=planTotals(p); tot=`${money(t.lo)}–${money(t.hi)}`; }catch(e){}
+    return `<div class="card plan-card">${p.thumb?`<img alt="" src="${esc(p.thumb)}">`:'<span class="ph"></span>'}<div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+      <button class="open" data-popen="${esc(p.id)}"><b>${esc(p.name)}</b><span class="hint">${p.analysis&&p.analysis.house&&p.analysis.house.sqft?p.analysis.house.sqft.toLocaleString()+' sq ft · ':''}${tot}</span></button>
+      <div class="saved"><div class="meta"><span>${fmtDate(p.updatedAt||p.createdAt)}</span><button class="linkbtn ${planConfirm===p.id?'danger':''}" data-pdel="${esc(p.id)}">${planConfirm===p.id?'Confirm delete':'Delete'}</button></div></div></div></div>`; }).join('')+'</div>';
+}
+$('#plan-saved').addEventListener('click',async e=>{
+  const o=e.target.closest('[data-popen]'), d=e.target.closest('[data-pdel]');
+  if(o){ const p=plansSaved.find(x=>x.id===o.dataset.popen); if(!p||!p.analysis) return; curPlan={...p,example:false}; renderPlan(); $('#plan-result').scrollIntoView({behavior:'smooth',block:'start'}); }
+  if(d){ const id=d.dataset.pdel; if(planConfirm!==id){ planConfirm=id; renderPlansSaved(); return; }
+    planConfirm=null; try{ await planCol().doc(id).delete(); if(curPlan.id===id){ curPlan.id=null; renderPlan(); } toast('Plan deleted'); }catch(err){ toast('Couldn\'t delete. Try again.'); } }
+});
+
+/* ---------- area form ---------- */
+function updateAreaChip(){ $('#area-chip b').textContent = zip || 'Set ZIP'; }
+function setZip(z){
+  zip=z; store.set('zip',z); $('#zip').value=z; updateAreaChip(); if(!$('#plan-zip').value) $('#plan-zip').value=z;
+  // carry the ZIP into the comparison unless it's a saved job that already has its own area
+  if(!job.id || !job.zip){ job.zip=z; renderJobHead(); $('#rfq').value=rfqText(); if(job.id) touch(); }
+}
+$('#area-chip').onclick=()=>{ selectTab('market'); window.scrollTo({top:0,behavior:'smooth'}); $('#zip').focus(); $('#zip').select(); };
+$('#area-form').addEventListener('submit',e=>{
+  e.preventDefault(); const z=$('#zip').value.trim();
+  if(!/^\d{5}(-\d{4})?$/.test(z)){ $('#zip').focus(); toast('Enter a 5-digit ZIP code.'); return; }
+  setZip(z); runSnapshot(z); runDisc();
+});
+
+/* ---------- tabs ---------- */
+const TABS=['market','compare','plans'];
+function selectTab(name){ TABS.forEach(t=>{ $('#tab-'+t).setAttribute('aria-selected', t===name); $('#panel-'+t).hidden = t!==name; }); }
+TABS.forEach(t=>$('#tab-'+t).onclick=()=>selectTab(t));
+
+/* ---------- boot ---------- */
+$('#zip').value=zip; updateAreaChip(); if(zip) job.zip=zip;
+renderSnapshot(); renderHistory(); renderDisc(); offerCalc(); renderJob(); renderSaved('loading'); renderMyYards(); renderPlan(); $('#plan-zip').value=zip;
+
+const use = n => (window.claude && window.claude.use) ? window.claude.use(n).catch(()=>null) : Promise.resolve(null);
+(async()=>{
+  const [s,d,u]=await Promise.all(['sample','db','user'].map(use));
+  cap.sample=s; cap.db=d;
+  cap.uid = u ? await u.id().catch(()=>null) : null;
+  if(!s){ $('#snap-hint').textContent='Area estimates need Claude. Open this page on claude.ai while signed in. The converter and quote comparison work without it.'; $('#est-btn').disabled=true; }
+  if(d){
+    d.collection('quotes').onSnapshot(q=>{ allShared=[]; q.docs.forEach(x=>arr(x.data()?.entries).forEach(e=>allShared.push(e))); renderSnapshot(); }, ()=>{});
+    d.doc('market/daily').onSnapshot(x=>{ if(x.exists) applyLive(x.data()); }, ()=>{});
+  }
+  imgLimits = s ? ((await s.limits().catch(()=>null))||{}).images || null : null;
+  if(imgLimits){ $('#plan-files').accept=['application/pdf',...imgLimits.mediaTypes].join(','); renderPages(); }
+  else { $('#drop').hidden=true; $('#plan-hint').textContent = s ? 'Uploading sheets isn\'t available in this view. Describe the house above and Claude will estimate from that.' : 'Plan analysis needs Claude. Open this page on claude.ai while signed in.'; }
+  if(!d||!cap.uid){ renderSaved('nodb'); renderMyYards('nodb'); renderPlansSaved('nodb'); return; }
+  planCol().onSnapshot(q=>{ plansSaved=q.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)); renderPlansSaved(); }, ()=>renderPlansSaved('nodb'));
+  let firstYards=true;
+  myCol().onSnapshot(q=>{
+    myYards=q.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+    renderMyYards();
+    if(firstYards && myYards.length && job.example){ job=blankJob(); renderJob(); }
+    firstYards=false;
+    renderMatrix();
+  }, ()=>renderMyYards('nodb'));
+  let timer=setTimeout(()=>renderSaved('slow'),10000);
+  col().onSnapshot(snapRes=>{
+    if(!snapRes.metadata.fromCache) clearTimeout(timer);
+    saved=snapRes.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+    renderSaved();
+  }, ()=>{ clearTimeout(timer); renderSaved('slow'); });
+})();
+})();
+</script>

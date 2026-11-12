@@ -1,0 +1,14 @@
+# Secrets: the Trading Economics key lives in the macOS Keychain, never in files.
+.env
+.env.*
+*.key
+*secret*
+*credentials*
+keys/
+# Feed output (generated data, refreshed daily)
+market_daily.json
+feed/*.json
+# Local junk
+.DS_Store
+shots/
+__pycache__/
